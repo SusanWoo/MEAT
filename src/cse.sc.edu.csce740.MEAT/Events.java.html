@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Events.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">Events.java</span></div><h1>Events.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import cse.sc.edu.csce740.MEAT.exception.MeetingException;
+
+public class Events {
+	
+	/**
+	 * Default constructor for an event.
+	 */
+<span class="fc" id="L26">	public Events() {</span>
+		
+<span class="fc" id="L28">	}</span>
+	
+	
+	/**
+	 * Returns the meeting list in database.
+	 * @return List&lt;List&lt;String&gt;&gt; 
+	 */
+	public List&lt;List&lt;String&gt;&gt; getMeetings() {
+<span class="fc" id="L36">		List&lt;List&lt;String&gt;&gt; meetings = new ArrayList&lt;List&lt;String&gt;&gt;();</span>
+		
+<span class="fc" id="L38">		Connection c = null;</span>
+<span class="fc" id="L39">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L41">	      Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L42">	      c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+<span class="fc" id="L43">	      stmt = c.createStatement();</span>
+<span class="fc" id="L44">	      String sql = &quot;select * from meeting&quot;;</span>
+	      
+<span class="fc" id="L46">	      ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">	      while (rs.next()) {</span>
+<span class="fc" id="L48">	    	  List&lt;String&gt; meeting = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L49">	    	  meeting.add(String.valueOf(rs.getInt(&quot;meetingid&quot;)));</span>
+<span class="fc" id="L50">	    	  meeting.add(String.valueOf(rs.getInt(&quot;meetingdate&quot;)));</span>
+<span class="fc" id="L51">	    	  meeting.add(String.valueOf(rs.getInt(&quot;starttime&quot;)));</span>
+<span class="fc" id="L52">	    	  meeting.add(String.valueOf(rs.getInt(&quot;endtime&quot;)));</span>
+<span class="fc" id="L53">	    	  meeting.add(rs.getString(&quot;attendee&quot;));</span>
+<span class="fc" id="L54">	    	  meeting.add(rs.getString(&quot;description&quot;));</span>
+<span class="fc" id="L55">	    	  meeting.add(rs.getString(&quot;roomid&quot;));</span>
+<span class="fc" id="L56">	    	  meetings.add(meeting);</span>
+	      }
+	      
+<span class="fc" id="L59">	      stmt.close();</span>
+<span class="fc" id="L60">	      rs.close();</span>
+<span class="fc" id="L61">	      c.close();</span>
+	      
+<span class="pc" id="L63">	    } catch (Exception e) {</span>
+<span class="nc" id="L64">	    	System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+	    }
+	    
+<span class="fc" id="L67">	    return meetings;</span>
+	}
+	
+	/**
+	 * Returns the vacartion list in database.
+	 * @return List&lt;List&lt;String&gt;&gt; 
+	 */
+	public List&lt;List&lt;String&gt;&gt; getVacations() {
+<span class="fc" id="L75">		List&lt;List&lt;String&gt;&gt; vacations = new ArrayList&lt;List&lt;String&gt;&gt;();</span>
+		
+<span class="fc" id="L77">		Connection c = null;</span>
+<span class="fc" id="L78">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L80">	      Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L81">	      c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+<span class="fc" id="L82">	      stmt = c.createStatement();</span>
+<span class="fc" id="L83">	      String sql = &quot;select * from vacation&quot;;</span>
+	      
+<span class="fc" id="L85">	      ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">	      while (rs.next()) {</span>
+<span class="fc" id="L87">	    	  List&lt;String&gt; vacation = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L88">	    	  vacation.add(rs.getString(&quot;employeeid&quot;));</span>
+<span class="fc" id="L89">	    	  vacation.add(String.valueOf(rs.getInt(&quot;startdate&quot;)));</span>
+<span class="fc" id="L90">	    	  vacation.add(String.valueOf(rs.getInt(&quot;enddate&quot;)));</span>
+<span class="fc" id="L91">	    	  vacation.add(rs.getString(&quot;description&quot;));</span>
+<span class="fc" id="L92">	    	  vacations.add(vacation);</span>
+	      }
+	      
+<span class="fc" id="L95">	      stmt.close();</span>
+<span class="fc" id="L96">	      rs.close();</span>
+<span class="fc" id="L97">	      c.close();</span>
+	      
+<span class="pc" id="L99">	    } catch (Exception e) {</span>
+<span class="nc" id="L100">	    	System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+	    }
+	    
+<span class="fc" id="L103">	    return vacations;</span>
+	}
+	
+	
+	/**
+	 * Returns the holiday list in database.
+	 * @return List&lt;List&lt;String&gt;&gt; 
+	 */
+	public List&lt;List&lt;String&gt;&gt; getHolidays() {
+<span class="fc" id="L112">		List&lt;List&lt;String&gt;&gt; holidays = new ArrayList&lt;List&lt;String&gt;&gt;();</span>
+		
+<span class="fc" id="L114">		Connection c = null;</span>
+<span class="fc" id="L115">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L117">	      Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L118">	      c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+<span class="fc" id="L119">	      stmt = c.createStatement();</span>
+<span class="fc" id="L120">	      String sql = &quot;select * from holiday&quot;;</span>
+	      
+<span class="fc" id="L122">	      ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">	      while (rs.next()) {</span>
+<span class="fc" id="L124">	    	  List&lt;String&gt; holiday = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L125">	    	  holiday.add(String.valueOf(rs.getInt(&quot;startdate&quot;)));</span>
+<span class="fc" id="L126">	    	  holiday.add(String.valueOf(rs.getInt(&quot;enddate&quot;)));</span>
+<span class="fc" id="L127">	    	  holiday.add(rs.getString(&quot;description&quot;));</span>
+<span class="fc" id="L128">	    	  holidays.add(holiday);</span>
+	      }
+	      
+<span class="fc" id="L131">	      stmt.close();</span>
+<span class="fc" id="L132">	      rs.close();</span>
+<span class="fc" id="L133">	      c.close();</span>
+	      
+<span class="pc" id="L135">	    } catch (Exception e) {</span>
+<span class="nc" id="L136">	    	System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+	    }
+	    
+<span class="fc" id="L139">	    return holidays;</span>
+	}
+	
+	/**
+	 * Adds the meeting to Meeting table in database.
+	 * @param aList
+	 * @return boolean
+	 */
+	public synchronized boolean addMeeting(Meeting m) {
+		//Adds meeting to database
+		//open databse
+<span class="fc" id="L150">		Connection c = null;</span>
+<span class="fc" id="L151">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L153">	      Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L154">	      c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+
+<span class="fc" id="L156">	      stmt = c.createStatement();</span>
+<span class="fc" id="L157">	      String sql = &quot;insert into meeting (meetingdate, starttime, endtime, roomid, attendee, description) values (&quot; + </span>
+<span class="fc" id="L158">	    		  		m.getDate() + &quot;,&quot; + </span>
+<span class="fc" id="L159">	    		  		m.getStartTime() + &quot;,&quot; +</span>
+<span class="fc" id="L160">	    		  		m.getEndTime() + &quot;,&quot; + </span>
+<span class="fc" id="L161">	    		  		&quot;'&quot; + m.getRoom() + &quot;',&quot; +</span>
+<span class="fc" id="L162">	    		  		&quot;'&quot; + m.getAttendee() + &quot;',&quot; +</span>
+<span class="fc" id="L163">	    		  		&quot;'&quot; + m.getDescription() + &quot;')&quot;;</span>
+<span class="nc" id="L164">	      stmt.executeUpdate(sql);</span>
+<span class="nc" id="L165">	      stmt.close();</span>
+//	      c.commit();
+<span class="nc" id="L167">	      c.close();</span>
+<span class="nc" id="L168">	      return true;</span>
+	     
+<span class="fc" id="L170">	    } catch ( Exception e ) {</span>
+<span class="fc" id="L171">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+	      
+<span class="fc" id="L173">	      return false;</span>
+//	      System.exit(0);
+	    }
+	}
+	
+	/**
+	 * Adds the holiday to the holiday database.
+	 * @param Holiday
+	 * @return void
+	 */
+	public synchronized boolean addHoliday(Holiday h) {
+		//open databse
+<span class="fc" id="L185">		Connection c = null;</span>
+<span class="fc" id="L186">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L188">	      Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L189">	      c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+
+<span class="fc" id="L191">	      stmt = c.createStatement();</span>
+<span class="fc" id="L192">	      String sql = &quot;insert into holiday (startdate, enddate, description) values (&quot; + </span>
+<span class="fc" id="L193">	    		  		h.getStartDate() + &quot;,&quot; + </span>
+<span class="fc" id="L194">	    		  		h.getEndDate() + &quot;,&quot; +</span>
+<span class="fc" id="L195">	    		  		&quot;'&quot; + h.getDescription() + &quot;')&quot;;</span>
+<span class="nc" id="L196">	      stmt.executeUpdate(sql);</span>
+<span class="nc" id="L197">	      stmt.close();</span>
+//	      c.commit();
+<span class="nc" id="L199">	      c.close();</span>
+<span class="nc" id="L200">	      return true;</span>
+	     
+<span class="fc" id="L202">	    } catch ( Exception e ) {</span>
+<span class="fc" id="L203">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="fc" id="L204">	      return false;</span>
+	    }
+	}
+	
+	/**
+	 * Adds the vacation to the vacation database.
+	 * @param Vacation
+	 * @return void
+	 */
+	public synchronized boolean addVacation(Vacation v) {
+		//open databse
+<span class="fc" id="L215">		Connection c = null;</span>
+<span class="fc" id="L216">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L218">		      Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L219">		      c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+		
+<span class="fc" id="L221">		      stmt = c.createStatement();</span>
+<span class="fc" id="L222">		      String sql = &quot;insert into vacation (employeeid, startdate, enddate, description) values (&quot; + </span>
+<span class="fc" id="L223">		    		  		&quot;'&quot; + v.getEmployee() + &quot;',&quot; +</span>
+<span class="fc" id="L224">		    		  		v.getStartDate() + &quot;,&quot; + </span>
+<span class="fc" id="L225">		    		  		v.getEndDate() + &quot;,&quot; +</span>
+<span class="fc" id="L226">		    		  		&quot;'&quot; + v.getDescription() + &quot;')&quot;;</span>
+<span class="nc" id="L227">		      stmt.executeUpdate(sql);</span>
+<span class="nc" id="L228">		      stmt.close();</span>
+//		      c.commit();
+<span class="nc" id="L230">		      c.close();</span>
+<span class="nc" id="L231">		      return true;</span>
+<span class="fc" id="L232">	    } catch ( Exception e ) {</span>
+<span class="fc" id="L233">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="fc" id="L234">	      return false;</span>
+	    }
+	}
+	
+	
+	/**
+	 * Returns the name of the meeting deleted given a meeting id
+	 * @param meetingToDelete
+	 * @return String
+	 */
+	public synchronized boolean deleteMeeting(String id) {
+		//open database
+<span class="fc" id="L246">		Connection c = null;</span>
+<span class="fc" id="L247">	    Statement stmt = null;</span>
+	    try {
+	    	
+<span class="fc" id="L250">		    Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L251">		    c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+		
+<span class="fc" id="L253">	        stmt = c.createStatement();</span>
+<span class="fc" id="L254">	        String sql = &quot;delete from meeting where meetingid = &quot; + id +&quot;;&quot;;</span>
+<span class="nc" id="L255">	        stmt.executeUpdate(sql);</span>
+<span class="nc" id="L256">	        stmt.close();</span>
+//	        c.commit();
+<span class="nc" id="L258">	        c.close();</span>
+<span class="nc" id="L259">	        return true;</span>
+<span class="fc" id="L260">	    } catch ( Exception e ) {</span>
+<span class="fc" id="L261">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="fc" id="L262">	      return false;</span>
+	    }
+	}
+	
+	/**
+	 * Returns the name of the meeting edited at the position specified
+	 * and null if the meeting does not exist.
+	 * @param Meeting
+	 * @return boolean
+	 */
+	public synchronized boolean editMeeting(Meeting m) throws MeetingException {
+		//search for existing meeting given meeting id;
+<span class="fc" id="L274">		int id = m.getId();</span>
+		//open database
+<span class="fc" id="L276">		Connection c = null;</span>
+<span class="fc" id="L277">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L279">		    Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L280">		    c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+		
+<span class="fc" id="L282">	        stmt = c.createStatement();</span>
+<span class="fc" id="L283">	        String sql = &quot;select * from meeting where meetingid = &quot; + id +&quot;;&quot;;</span>
+<span class="fc" id="L284">	        ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L285" title="All 2 branches covered.">	        if (!rs.next()) {</span>
+<span class="fc" id="L286">	        	System.out.println(&quot;The meeting id is not in the database.&quot;);</span>
+<span class="fc" id="L287">	        	return false;</span>
+	        } else {
+<span class="fc" id="L289">	        	sql = &quot;UPDATE meeting set &quot;;</span>
+<span class="fc" id="L290">	        	boolean isAdded = false;</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">	        	if (m.getDate() != 0) {</span>
+<span class="fc" id="L292">	        		sql += &quot;meetingdate = &quot; + m.getDate() + &quot;,&quot;;</span>
+<span class="fc" id="L293">	        		isAdded = true;</span>
+	        	}
+<span class="fc bfc" id="L295" title="All 2 branches covered.">	        	if (m.getStartTime() != 0) {</span>
+<span class="fc" id="L296">	        		sql += &quot;starttime = &quot; + m.getStartTime() +&quot;,&quot;;</span>
+<span class="fc" id="L297">	        		isAdded = true;</span>
+	        	}
+<span class="fc bfc" id="L299" title="All 2 branches covered.">	        	if (m.getEndTime() != 0) {</span>
+<span class="fc" id="L300">	        		sql += &quot;endtime = &quot; + m.getEndTime() + &quot;,&quot;;</span>
+<span class="fc" id="L301">	        		isAdded = true;</span>
+	        	}
+<span class="fc bfc" id="L303" title="All 2 branches covered.">	        	if (m.getRoom() != &quot;&quot;) {</span>
+<span class="fc" id="L304">	        		sql += &quot;room = '&quot; + m.getRoom() + &quot;',&quot;;</span>
+<span class="fc" id="L305">	        		isAdded = true;</span>
+	        	}
+<span class="fc bfc" id="L307" title="All 2 branches covered.">	        	if (m.getDescription() != &quot;&quot;) {</span>
+<span class="fc" id="L308">	        		sql += &quot;description = '&quot; + m.getDescription() + &quot;',&quot;;</span>
+<span class="fc" id="L309">	        		isAdded = true;</span>
+	        	}
+<span class="fc bfc" id="L311" title="All 2 branches covered.">	        	if (isAdded) {</span>
+<span class="fc" id="L312">	        		sql = sql.substring(0, sql.length() - 1);</span>
+<span class="fc" id="L313">	        		sql += &quot; where meetingid = &quot; + m.getId() + &quot;;&quot;;</span>
+	        		
+	        		//execute sql
+<span class="fc" id="L316">	        		stmt.executeUpdate(sql);</span>
+//	        		c.commit();
+<span class="fc" id="L318">	        	} else {</span>
+<span class="fc" id="L319">	        		throw new MeetingException(&quot;No meeting information provided.&quot;);</span>
+	        	}
+	        }
+	        
+<span class="fc" id="L323">	        rs.close();</span>
+<span class="fc" id="L324">	        stmt.close();</span>
+<span class="fc" id="L325">	        c.close();</span>
+<span class="fc" id="L326">	        return true;</span>
+<span class="fc" id="L327">	    } catch ( Exception e ) {</span>
+<span class="fc" id="L328">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="fc" id="L329">	      return false;</span>
+	    }
+	}
+	
+	/**
+	 * Returns the id of the meeting edited at the position specified
+	 * and null if the attendees cannot be added.
+	 * @param meetingToEdit
+	 * @return boolean
+	 */
+	public synchronized boolean editMeetingAddAttendee(Meeting meetingToEdit) {
+<span class="fc" id="L340">		int id = meetingToEdit.getId();</span>
+<span class="fc" id="L341">		String attendee = meetingToEdit.getAttendee();</span>
+		
+		//open database
+<span class="fc" id="L344">		Connection c = null;</span>
+<span class="fc" id="L345">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L347">		    Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L348">		    c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+		
+<span class="fc" id="L350">	        stmt = c.createStatement();</span>
+	        //check meeting exist
+<span class="fc" id="L352">	        String sql = &quot;select attendee, meetingdate from meeting where meetingid = &quot; + id + &quot;;&quot;;</span>
+<span class="fc" id="L353">	        ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L354" title="All 2 branches covered.">	        if (!rs.next()) {</span>
+<span class="fc" id="L355">	        	throw new MeetingException(&quot;Meeting is not in database.&quot;);</span>
+	        } else {
+<span class="fc" id="L357">	        	String attendees = rs.getString(&quot;attendee&quot;);</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">	        	if (attendees.contains(attendee.substring(0, attendee.length() - 1))) {</span>
+<span class="fc" id="L359">	        		System.out.println(&quot;Attendee is already in the attendee list of the meeting.&quot;);</span>
+<span class="fc" id="L360">	        		rs.close();</span>
+<span class="fc" id="L361">	    	        stmt.close();</span>
+<span class="fc" id="L362">	    	        c.close();</span>
+<span class="fc" id="L363">	    	        return false;</span>
+	        	} else {
+<span class="fc" id="L365">		        	int meetingDate = rs.getInt(&quot;meetingdate&quot;);</span>
+		        	//check attendee available
+<span class="fc" id="L367">		        	sql = &quot;select startdate, enddate from vacation where employeeid = '&quot; + attendee.substring(0, attendee.length() - 1) + &quot;'&quot;;</span>
+<span class="fc" id="L368">		        	rs = stmt.executeQuery(sql);</span>
+<span class="fc" id="L369">		        	boolean isAvailable = true;</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">		        	if (rs.next()) {</span>
+<span class="pc bpc" id="L371" title="1 of 2 branches missed.">		        		while (rs.next()) {</span>
+<span class="fc" id="L372">		        			int startDate = rs.getInt(&quot;startdate&quot;);</span>
+<span class="fc" id="L373">		        			int endDate = rs.getInt(&quot;enddate&quot;);</span>
+<span class="pc bpc" id="L374" title="2 of 4 branches missed.">		        			if (startDate &lt;= meetingDate &amp;&amp; meetingDate &lt;= endDate) {</span>
+<span class="fc" id="L375">		        				isAvailable = false;</span>
+<span class="fc" id="L376">		        				break;</span>
+		        			}	
+		        		}
+		        	} 
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">		        	if (isAvailable) {</span>
+<span class="nc" id="L381">		        		attendees += attendee;</span>
+<span class="nc" id="L382">		        		sql = &quot;update meeting set attendee = '&quot; + attendees + &quot;' where meetingid = &quot; + id + &quot;;&quot;;</span>
+<span class="nc" id="L383">		        		stmt.executeUpdate(sql);</span>
+		        	}	
+	        	}
+	        }
+<span class="fc" id="L387">	        rs.close();</span>
+<span class="fc" id="L388">	        stmt.close();</span>
+<span class="fc" id="L389">	        c.close();</span>
+<span class="fc" id="L390">	        return true;</span>
+<span class="fc" id="L391">	    } catch (Exception e) {</span>
+	    	//System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );
+<span class="fc" id="L393">		    return false;</span>
+	    }   
+	}
+	
+	/**
+	 * Returns the id of the meeting edited at the position specified
+	 * and null if the attendees cannot be removed.
+	 * @param meetingToEdit
+	 * @return boolean
+	 */
+	public synchronized boolean editMeetingRemoveAttendee(Meeting meetingToEdit) throws MeetingException{
+<span class="fc" id="L404">		int id = meetingToEdit.getId();</span>
+<span class="fc" id="L405">		String attendee = meetingToEdit.getAttendee();</span>
+		
+		//open database
+<span class="fc" id="L408">		Connection c = null;</span>
+<span class="fc" id="L409">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L411">		    Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L412">		    c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+		
+<span class="fc" id="L414">	        stmt = c.createStatement();</span>
+<span class="fc" id="L415">	        String sql = &quot;select attendee from meeting where meetingid = &quot; + id +&quot;;&quot;;</span>
+<span class="fc" id="L416">	        ResultSet rs = stmt.executeQuery(sql);</span>
+	        
+	        //if meeting does not exist, throw error msg
+<span class="fc bfc" id="L419" title="All 2 branches covered.">	        if (!rs.next()) {</span>
+<span class="fc" id="L420">	        	throw new MeetingException(&quot;Meeting is not in database.&quot;);</span>
+	        	//System.out.println(&quot;Meeting does not exist.&quot;);
+//	        	rs.close();
+//		        stmt.close();
+//		        c.close();
+//		        return false;
+	        } else {
+<span class="fc" id="L427">	        	String attendees = rs.getString(&quot;attendee&quot;);</span>
+<span class="fc" id="L428">	        	String[] attendeeArray = attendees.split(&quot;,&quot;);</span>
+<span class="fc" id="L429">	        	String attendeeToUpdate = &quot;&quot;;</span>
+<span class="fc bfc" id="L430" title="All 2 branches covered.">	        	for (String s : attendeeArray) {</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">	        		if (!s.equals(attendee.substring(0, attendee.length() - 1))) {</span>
+<span class="fc" id="L432">	        			attendeeToUpdate += s + &quot;,&quot;;</span>
+	        		}
+	        	}
+<span class="fc" id="L435">	        	sql = &quot;UPDATE meeting set attendee = '&quot; + attendeeToUpdate + &quot;' where meetingid = &quot; + id + &quot;;&quot;;</span>
+<span class="nc" id="L436">	        	stmt.executeUpdate(sql);</span>
+//	        	c.commit();
+	        }
+	        
+<span class="nc" id="L440">	        rs.close();</span>
+<span class="nc" id="L441">	        stmt.close();</span>
+<span class="nc" id="L442">	        c.close();</span>
+<span class="nc" id="L443">	        return true;</span>
+<span class="fc" id="L444">	    } catch (Exception e) {</span>
+	    	//System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );
+<span class="fc" id="L446">		    return false;</span>
+	    }
+	}
+	
+	
+	/**
+	 * Prints the universal schedule given start date and end date
+	 * @param startdate, enddate, outputfile
+	 * @return String
+	 */
+	public synchronized boolean printScheduleAll(int startDate, int endDate, String outputFile) {
+//		int start = Integer.parseInt(startDate.substring(4, 8) + startDate.substring(0, 2) + startDate.substring(2, 4));
+//		int end = Integer.parseInt(endDate.substring(4, 8) + endDate.substring(0, 2) + endDate.substring(2, 4));
+//open database
+<span class="fc" id="L460">		Connection c = null;</span>
+<span class="fc" id="L461">	    Statement stmt = null;</span>
+	    try {
+//	    	
+<span class="fc" id="L464">		    Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L465">		    c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+//		
+<span class="fc" id="L467">	        stmt = c.createStatement();</span>
+	        
+<span class="fc" id="L469">	        JSONArray outerArray = new JSONArray();</span>
+<span class="fc" id="L470">	        JSONObject outerObject = new JSONObject();</span>
+<span class="fc" id="L471">	        JSONArray innerArray = new JSONArray();</span>
+	        
+<span class="fc" id="L473">	        String sql = &quot;select * from meeting where meetingdate &gt;= &quot; + startDate + &quot; and  meetingdate &lt;= &quot; + endDate + &quot;;&quot;;</span>
+	        
+<span class="fc" id="L475">  	      	ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L476" title="All 2 branches covered.">  	      	while (rs.next()) {</span>
+<span class="fc" id="L477">  	      		JSONObject obj = new JSONObject();</span>
+<span class="fc" id="L478">  	      		obj.put(&quot;meeting-id&quot;, Integer.toString(rs.getInt(&quot;meetingid&quot;)));</span>
+<span class="fc" id="L479">  	      		obj.put(&quot;date&quot;, Integer.toString(rs.getInt(&quot;meetingdate&quot;)));</span>
+<span class="fc" id="L480">  	      		obj.put(&quot;start-time&quot;, Integer.toString(rs.getInt(&quot;starttime&quot;)));</span>
+<span class="fc" id="L481">  	      		obj.put(&quot;end-time&quot;, Integer.toString(rs.getInt(&quot;endtime&quot;)));</span>
+<span class="fc" id="L482">  	      		obj.put(&quot;room-id&quot;, rs.getString(&quot;roomid&quot;));</span>
+<span class="fc" id="L483">  	      		obj.put(&quot;description&quot;, rs.getString(&quot;description&quot;));</span>
+<span class="fc" id="L484">  	      		JSONArray attendArray = new JSONArray();</span>
+<span class="fc" id="L485">  	      		String[] split = rs.getString(&quot;attendee&quot;).split(&quot;,&quot;);</span>
+<span class="fc bfc" id="L486" title="All 2 branches covered.">  	      		for (String s : split) {</span>
+<span class="fc" id="L487">  	      			JSONObject attObj = new JSONObject();</span>
+<span class="fc" id="L488">  	      			attObj.put(&quot;name&quot;, s);</span>
+<span class="fc" id="L489">  	      			attendArray.add(attObj);</span>
+  	      		}
+<span class="fc" id="L491">  	      		obj.put(&quot;attendees&quot;, attendArray);</span>
+<span class="fc" id="L492">  	      		innerArray.add(obj);</span>
+  	      	}
+  	      	
+<span class="fc" id="L495">	        sql = &quot;select * from vacation where startdate &gt;= &quot; + startDate + &quot; and enddate &lt;= &quot; + endDate + &quot;;&quot;;</span>
+<span class="fc" id="L496">	        rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L497" title="All 2 branches covered.">  	      	while (rs.next()) {</span>
+<span class="fc" id="L498">  	      		JSONObject obj = new JSONObject();</span>
+<span class="fc" id="L499">	      		obj.put(&quot;employee-id&quot;, rs.getString(&quot;employeeid&quot;));</span>
+<span class="fc" id="L500">	      		obj.put(&quot;start-date&quot;, Integer.toString(rs.getInt(&quot;startdate&quot;)));</span>
+<span class="fc" id="L501">	      		obj.put(&quot;end-date&quot;, Integer.toString(rs.getInt(&quot;enddate&quot;)));</span>
+<span class="fc" id="L502">	      		obj.put(&quot;description&quot;, rs.getString(&quot;description&quot;));</span>
+<span class="fc" id="L503">	      		innerArray.add(obj);</span>
+  	      	}
+  	      	
+<span class="fc" id="L506">  	      	sql = &quot;select * from holiday where startdate &gt;= &quot; + startDate + &quot; and enddate &lt;= &quot; + endDate + &quot;;&quot;;</span>
+<span class="fc" id="L507">	        rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">	      	while (rs.next()) {</span>
+<span class="fc" id="L509">	      		JSONObject obj = new JSONObject();</span>
+<span class="fc" id="L510">	      		obj.put(&quot;start-date&quot;, Integer.toString(rs.getInt(&quot;startdate&quot;)));</span>
+<span class="fc" id="L511">	      		obj.put(&quot;end-date&quot;, Integer.toString(rs.getInt(&quot;enddate&quot;)));</span>
+<span class="fc" id="L512">	      		obj.put(&quot;description&quot;, rs.getString(&quot;description&quot;));</span>
+<span class="fc" id="L513">	      		innerArray.add(obj);</span>
+	      	}
+	      	
+<span class="fc" id="L516">	      	outerObject.put(&quot;events&quot;, innerArray);</span>
+<span class="fc" id="L517">	      	outerArray.add(outerObject);</span>
+	        
+<span class="fc" id="L519">	      	Gson gSon = new GsonBuilder().setPrettyPrinting().create();</span>
+<span class="fc" id="L520">	      	String json = gSon.toJson(outerArray);</span>
+//	      	System.out.print(json);
+	      	
+<span class="fc" id="L523">	      	rs.close();</span>
+<span class="fc" id="L524">	        stmt.close();</span>
+<span class="fc" id="L525">	        c.close();</span>
+	        
+	        try {
+<span class="fc" id="L528">	        	String path = System.getProperty(&quot;user.dir&quot;) + &quot;/&quot; + outputFile;</span>
+<span class="fc" id="L529">	    		FileWriter file = new FileWriter(path);</span>
+<span class="fc" id="L530">	    		file.write(json);</span>
+<span class="fc" id="L531">	    		file.flush();</span>
+<span class="fc" id="L532">	    		file.close();</span>
+<span class="fc" id="L533">	    		System.out.println(&quot;Universal schedule successfully printed to file :'&quot; + outputFile + &quot;' under current project folder.&quot;);</span>
+<span class="pc" id="L534">	    	} catch (IOException e) {</span>
+<span class="nc" id="L535">	    		e.printStackTrace();</span>
+	    	}
+
+//	    	System.out.print(outerArray);
+
+<span class="fc" id="L540">	        return true;</span>
+<span class="nc" id="L541">	    } catch ( Exception e ) {</span>
+<span class="nc" id="L542">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="nc" id="L543">	      return false;</span>
+	    }
+	}
+	
+	/**
+	 * Prints the employee schedule given start date and end date and employeeid
+	 * @param employeeid, startdate, enddate, outputfile
+	 * @return boolean
+	 */
+	public synchronized boolean printScheduleEmployee(String employeeId, int startDate, int endDate, String outputFile) {
+		//open database
+<span class="fc" id="L554">		Connection c = null;</span>
+<span class="fc" id="L555">	    Statement stmt = null;</span>
+	    try {
+	    	
+<span class="fc" id="L558">		    Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L559">		    c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+		
+<span class="fc" id="L561">	        stmt = c.createStatement();</span>
+	        
+<span class="fc" id="L563">	        JSONArray outerArray = new JSONArray();</span>
+<span class="fc" id="L564">	        JSONObject outerObject = new JSONObject();</span>
+<span class="fc" id="L565">	        JSONArray innerArray = new JSONArray();</span>
+	        
+	        
+	        //extract data from meeting database
+	        //date is between start and end date, attendee contains employeeid
+<span class="fc" id="L570">	        String sql = &quot;select * from meeting where meetingdate &gt;= &quot; + startDate + &quot; and meetingdate &lt;= &quot; + endDate </span>
+<span class="fc" id="L571">	        				+ &quot; and attendee like '%&quot; + employeeId + &quot;%';&quot;;</span>
+<span class="fc" id="L572">	        ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L573" title="All 2 branches covered.">	        while (rs.next()) {</span>
+	        	//add to result list
+<span class="fc" id="L575">	        	JSONObject obj = new JSONObject();</span>
+<span class="fc" id="L576">  	      		obj.put(&quot;meeting-id&quot;, Integer.toString(rs.getInt(&quot;meetingid&quot;)));</span>
+<span class="fc" id="L577">  	      		obj.put(&quot;date&quot;, Integer.toString(rs.getInt(&quot;meetingdate&quot;)));</span>
+<span class="fc" id="L578">  	      		obj.put(&quot;start-time&quot;, Integer.toString(rs.getInt(&quot;starttime&quot;)));</span>
+<span class="fc" id="L579">  	      		obj.put(&quot;end-time&quot;, Integer.toString(rs.getInt(&quot;endtime&quot;)));</span>
+<span class="fc" id="L580">  	      		obj.put(&quot;room-id&quot;, rs.getString(&quot;roomid&quot;));</span>
+<span class="fc" id="L581">  	      		obj.put(&quot;description&quot;, rs.getString(&quot;description&quot;));</span>
+<span class="fc" id="L582">  	      		JSONArray attendArray = new JSONArray();</span>
+<span class="fc" id="L583">  	      		String[] split = rs.getString(&quot;attendee&quot;).split(&quot;,&quot;);</span>
+<span class="fc bfc" id="L584" title="All 2 branches covered.">  	      		for (String s : split) {</span>
+<span class="fc" id="L585">  	      			JSONObject attObj = new JSONObject();</span>
+<span class="fc" id="L586">  	      			attObj.put(&quot;name&quot;, s);</span>
+<span class="fc" id="L587">  	      			attendArray.add(attObj);</span>
+  	      		}
+<span class="fc" id="L589">  	      		obj.put(&quot;attendees&quot;, attendArray);</span>
+<span class="fc" id="L590">  	      		innerArray.add(obj);</span>
+	        }
+	        
+	        //extract from vacation database
+	        //data in between and attendee is employeeid
+	        
+<span class="fc" id="L596">	        sql = &quot;select * from vacation where employeeid = '&quot; + employeeId + &quot;' and startdate &gt;= &quot; + startDate </span>
+<span class="fc" id="L597">	        		+ &quot; and enddate &lt;= &quot; + endDate + &quot;;&quot;;</span>
+<span class="pc bpc" id="L598" title="1 of 2 branches missed.">	        while (rs.next()) {</span>
+	        	//add to result list
+<span class="nc" id="L600">	        	JSONObject obj = new JSONObject();</span>
+<span class="nc" id="L601">	      		obj.put(&quot;employee-id&quot;, rs.getString(&quot;employeeid&quot;));</span>
+<span class="nc" id="L602">	      		obj.put(&quot;start-date&quot;, Integer.toString(rs.getInt(&quot;startdate&quot;)));</span>
+<span class="nc" id="L603">	      		obj.put(&quot;end-date&quot;, Integer.toString(rs.getInt(&quot;enddate&quot;)));</span>
+<span class="nc" id="L604">	      		obj.put(&quot;description&quot;, rs.getString(&quot;description&quot;));</span>
+<span class="nc" id="L605">	      		innerArray.add(obj);</span>
+	        }
+	        
+<span class="fc" id="L608">	        rs.close();</span>
+<span class="fc" id="L609">	        stmt.close();</span>
+<span class="fc" id="L610">	        c.close();</span>
+	        
+<span class="fc" id="L612">	        outerObject.put(&quot;events&quot;, innerArray);</span>
+<span class="fc" id="L613">	      	outerArray.add(outerObject);</span>
+	      	
+<span class="fc" id="L615">	        Gson gSon = new GsonBuilder().setPrettyPrinting().create();</span>
+<span class="fc" id="L616">	      	String json = gSon.toJson(outerArray);</span>
+//	      	System.out.print(json);
+	      	
+	      	try {
+<span class="fc" id="L620">	      		String path = System.getProperty(&quot;user.dir&quot;) + &quot;/&quot; + outputFile;</span>
+<span class="fc" id="L621">	    		FileWriter file = new FileWriter(path);</span>
+<span class="fc" id="L622">	    		file.write(json);</span>
+<span class="fc" id="L623">	    		file.flush();</span>
+<span class="fc" id="L624">	    		file.close();</span>
+<span class="fc" id="L625">	    		System.out.println(&quot;Employee schedule successfully printed to file :'&quot; + outputFile + &quot;' under current project folder.&quot;);</span>
+<span class="pc" id="L626">	    	} catch (IOException e) {</span>
+<span class="nc" id="L627">	    		e.printStackTrace();</span>
+	    	}
+<span class="fc" id="L629">	        return true;</span>
+<span class="nc" id="L630">	    } catch ( Exception e ) {</span>
+<span class="nc" id="L631">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="nc" id="L632">	      return false;</span>
+	    }
+	}
+	
+	/**
+	 * Prints the room schedule given start date and end date and room id
+	 * @param roomid, startdate, enddate, outputfile
+	 * @return boolean
+	 */
+	public synchronized boolean printScheduleRoom(String roomId, int startDate, int endDate, String outputFile) {
+		//open database
+<span class="fc" id="L643">		Connection c = null;</span>
+<span class="fc" id="L644">	    Statement stmt = null;</span>
+	    try {
+	    	
+<span class="fc" id="L647">		    Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L648">		    c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+		
+<span class="fc" id="L650">	        stmt = c.createStatement();</span>
+	        
+<span class="fc" id="L652">	        JSONArray outerArray = new JSONArray();</span>
+<span class="fc" id="L653">	        JSONObject outerObject = new JSONObject();</span>
+<span class="fc" id="L654">	        JSONArray innerArray = new JSONArray();</span>
+	        
+	        //only search the meeting database
+<span class="fc" id="L657">	        String sql = &quot;select * from meeting where roomid = '&quot; + roomId + &quot;' and meetingdate &gt;= &quot; + startDate + &quot; and meetingdate &lt;= &quot; + endDate +&quot;;&quot;;</span>
+<span class="fc" id="L658">	        ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="pc bpc" id="L659" title="1 of 2 branches missed.">	        while (rs.next()) {</span>
+	        	//store data and make list here
+<span class="nc" id="L661">	        	JSONObject obj = new JSONObject();</span>
+<span class="nc" id="L662">  	      		obj.put(&quot;meeting-id&quot;, Integer.toString(rs.getInt(&quot;meetingid&quot;)));</span>
+<span class="nc" id="L663">  	      		obj.put(&quot;date&quot;, Integer.toString(rs.getInt(&quot;meetingdate&quot;)));</span>
+<span class="nc" id="L664">  	      		obj.put(&quot;start-time&quot;, Integer.toString(rs.getInt(&quot;starttime&quot;)));</span>
+<span class="nc" id="L665">  	      		obj.put(&quot;end-time&quot;, Integer.toString(rs.getInt(&quot;endtime&quot;)));</span>
+<span class="nc" id="L666">  	      		obj.put(&quot;room-id&quot;, rs.getString(&quot;roomid&quot;));</span>
+<span class="nc" id="L667">  	      		obj.put(&quot;description&quot;, rs.getString(&quot;description&quot;));</span>
+<span class="nc" id="L668">  	      		JSONArray attendArray = new JSONArray();</span>
+<span class="nc" id="L669">  	      		String[] split = rs.getString(&quot;attendee&quot;).split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L670" title="All 2 branches missed.">  	      		for (String s : split) {</span>
+<span class="nc" id="L671">  	      			JSONObject attObj = new JSONObject();</span>
+<span class="nc" id="L672">  	      			attObj.put(&quot;name&quot;, s);</span>
+<span class="nc" id="L673">  	      			attendArray.add(attObj);</span>
+  	      		}
+<span class="nc" id="L675">  	      		obj.put(&quot;attendees&quot;, attendArray);</span>
+<span class="nc" id="L676">  	      		innerArray.add(obj);</span>
+	        }
+	        
+<span class="fc" id="L679">	        rs.close();</span>
+<span class="fc" id="L680">	        stmt.close();</span>
+<span class="fc" id="L681">	        c.close();</span>
+	        
+<span class="fc" id="L683">	        outerObject.put(&quot;events&quot;, innerArray);</span>
+<span class="fc" id="L684">	      	outerArray.add(outerObject);</span>
+	      	
+<span class="fc" id="L686">	        Gson gSon = new GsonBuilder().setPrettyPrinting().create();</span>
+<span class="fc" id="L687">	      	String json = gSon.toJson(outerArray);</span>
+//	      	System.out.print(json);
+	      	
+	      	try {
+<span class="fc" id="L691">	    		FileWriter file = new FileWriter(System.getProperty(&quot;user.dir&quot;) + &quot;/&quot; + outputFile);</span>
+<span class="fc" id="L692">	    		file.write(json);</span>
+<span class="fc" id="L693">	    		file.flush();</span>
+<span class="fc" id="L694">	    		file.close();</span>
+<span class="fc" id="L695">	    		System.out.println(&quot;Room schedule successfully printed to file :'&quot; + outputFile + &quot;' under current project folder.&quot;);</span>
+
+<span class="pc" id="L697">	    	} catch (IOException e) {</span>
+<span class="nc" id="L698">	    		e.printStackTrace();</span>
+	    	}
+	        
+<span class="fc" id="L701">	        return true;</span>
+<span class="nc" id="L702">	    } catch ( Exception e ) {</span>
+<span class="nc" id="L703">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="nc" id="L704">	      return false;</span>
+	    }
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

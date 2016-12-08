@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>EventScheduler.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">EventScheduler.java</span></div><h1>EventScheduler.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+import java.util.List;
+
+import cse.sc.edu.csce740.MEAT.exception.HolidayException;
+import cse.sc.edu.csce740.MEAT.exception.MeetingException;
+import cse.sc.edu.csce740.MEAT.exception.VacationException;
+
+
+public class EventScheduler {
+	private Events events;
+	
+	/**
+     * Constructor for the event scheduler
+     *
+     */
+<span class="fc" id="L17">	public EventScheduler() {</span>
+<span class="fc" id="L18">		events = new Events();</span>
+<span class="fc" id="L19">	}</span>
+	
+	/**
+	 * Returns true if the meeting is added to the
+	 * list of meetings in the Events and false
+	 * otherwise.
+	 * @param aList
+	 * @return boolean
+	 */
+	public boolean addMeeting(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L29">		Meeting m = new Meeting();</span>
+<span class="fc" id="L30">		String date = &quot;&quot;;</span>
+<span class="fc" id="L31">		String startTime = &quot;&quot;;</span>
+<span class="fc" id="L32">		String endTime = &quot;&quot;;</span>
+<span class="fc" id="L33">		String room = &quot;&quot;;</span>
+<span class="fc" id="L34">		String attendee = &quot;&quot;;</span>
+<span class="fc" id="L35">		String description = &quot;&quot;;</span>
+		try {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">			for (Arguments a : aList) {</span>
+<span class="pc bpc" id="L38" title="7 of 19 branches missed.">				switch (a.name) {</span>
+					case &quot;date&quot; :
+<span class="fc" id="L40">						date = a.value;</span>
+<span class="fc" id="L41">						break;</span>
+					case &quot;start-time&quot;:
+<span class="fc" id="L43">						startTime = a.value;</span>
+<span class="fc" id="L44">						break;</span>
+					case &quot;end-time&quot;:
+<span class="fc" id="L46">						endTime = a.value;</span>
+<span class="fc" id="L47">						break;</span>
+					case &quot;room-id&quot;:
+<span class="fc" id="L49">						room = a.value;</span>
+<span class="fc" id="L50">						break;</span>
+					case &quot;attendee&quot;:
+<span class="fc" id="L52">						attendee += a.value + &quot;,&quot;;</span>
+<span class="fc" id="L53">						break;</span>
+					case &quot;description&quot;:
+<span class="fc" id="L55">						description = a.value;</span>
+						break;
+				}
+			}
+<span class="fc" id="L59">			m.setDate(date);</span>
+<span class="fc" id="L60">			m.setStartTime(startTime);</span>
+<span class="fc" id="L61">			m.setEndTime(endTime);</span>
+<span class="fc" id="L62">			m.setRoom(room);</span>
+<span class="fc" id="L63">			m.setAttendee(attendee);</span>
+<span class="fc" id="L64">			m.setDescription(description);</span>
+			
+<span class="fc" id="L66">			return events.addMeeting(m);</span>
+<span class="fc" id="L67">		} catch (MeetingException e) {</span>
+//			hasError = true;
+<span class="fc" id="L69">			System.out.println(e.getMessage());</span>
+<span class="fc" id="L70">			return false;</span>
+		}	
+	}
+	
+	/**
+	 * Returns true if the vacation is added to the
+	 * list of vacations in the Events and false
+	 * otherwise.
+	 * @param v
+	 * @return boolean
+	 */
+	public boolean addVacation(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L82">		Vacation v = new Vacation();</span>
+<span class="fc" id="L83">		String employeeId = &quot;&quot;;</span>
+<span class="fc" id="L84">		String startDate = &quot;&quot;;</span>
+<span class="fc" id="L85">		String endDate = &quot;&quot;;</span>
+<span class="fc" id="L86">		String description = &quot;&quot;;</span>
+		try {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">			for (Arguments a : aList) {</span>
+<span class="pc bpc" id="L89" title="5 of 13 branches missed.">				switch (a.name) {</span>
+					case &quot;employee-id&quot;:
+<span class="fc" id="L91">						employeeId = a.value;</span>
+<span class="fc" id="L92">						break;</span>
+					case &quot;start-date&quot;:
+<span class="fc" id="L94">						startDate = a.value;</span>
+<span class="fc" id="L95">						break;</span>
+					case &quot;end-date&quot;:
+<span class="fc" id="L97">						endDate = a.value;</span>
+<span class="fc" id="L98">						break;</span>
+					case &quot;description&quot;:
+<span class="fc" id="L100">						description = a.value;</span>
+						break;
+				}
+			}
+			
+<span class="fc" id="L105">			v.setEmployee(employeeId);</span>
+<span class="fc" id="L106">			v.setStartDate(startDate);</span>
+<span class="fc" id="L107">			v.setEndDate(endDate);</span>
+<span class="fc" id="L108">			v.setDescription(description);</span>
+			
+<span class="fc" id="L110">			return events.addVacation(v);</span>
+<span class="fc" id="L111">		} catch (VacationException e) {</span>
+			
+<span class="fc" id="L113">			System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="fc" id="L114">			return false;</span>
+		}
+	}
+	
+	/**
+	 * Returns true if the holiday is added to the holiday database
+	 * otherwise.
+	 * @param h
+	 * @return boolean
+	 */
+	public boolean addHoliday(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L125">		Holiday h = new Holiday();</span>
+<span class="fc" id="L126">		String startDate = &quot;&quot;;</span>
+<span class="fc" id="L127">		String endDate = &quot;&quot;;</span>
+<span class="fc" id="L128">		String description = &quot;&quot;;</span>
+		
+		try {
+<span class="fc bfc" id="L131" title="All 2 branches covered.">			for (Arguments a : aList) {</span>
+<span class="pc bpc" id="L132" title="4 of 10 branches missed.">				switch (a.name) {</span>
+					case &quot;start-date&quot;:
+<span class="fc" id="L134">						startDate = a.value;</span>
+<span class="fc" id="L135">						break;</span>
+					case &quot;end-date&quot;:
+<span class="fc" id="L137">						endDate = a.value;</span>
+<span class="fc" id="L138">						break;</span>
+					case &quot;description&quot;:
+<span class="fc" id="L140">						description = a.value;</span>
+						break;
+				}
+			}
+			
+<span class="fc" id="L145">			h.setStartDate(startDate);</span>
+<span class="fc" id="L146">			h.setEndDate(endDate);</span>
+<span class="fc" id="L147">			h.setDescription(description);</span>
+			
+<span class="fc" id="L149">			return events.addHoliday(h);</span>
+<span class="fc" id="L150">		} catch (HolidayException e) {</span>
+<span class="fc" id="L151">			System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+<span class="fc" id="L152">			return false;</span>
+		}
+	}
+	
+	/**
+	 * Returns the list of meeting in the Meeting database.
+	 * @return List&lt;List&lt;String&gt;&gt;
+	 */
+	public synchronized List&lt;List&lt;String&gt;&gt; getMeetings() {
+<span class="fc" id="L161">		return events.getMeetings();</span>
+	}
+	
+	/**
+	 * Returns the list of vacation in the Vacation database.
+	 * @return List&lt;List&lt;String&gt;&gt;
+	 */
+	public synchronized List&lt;List&lt;String&gt;&gt; getVacations() {
+<span class="fc" id="L169">		return events.getVacations();</span>
+	}
+	
+	/**
+	 * Returns the list of holiday in the Holiday database.
+	 * @return List&lt;List&lt;String&gt;&gt;
+	 */
+	public synchronized List&lt;List&lt;String&gt;&gt; getHolidays() {
+<span class="fc" id="L177">		return events.getHolidays();</span>
+	}
+	
+	
+	/**
+	 * Returns the meeting id of the successfully deleted meeting
+	 * or null if the meeting cannot be deleted.
+	 * 
+	 * @param meetingToDelete
+	 * @return boolean
+	 */
+	public boolean deleteMeeting(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L189">		String id = aList.get(0).value;</span>
+<span class="fc" id="L190">		return events.deleteMeeting(id);</span>
+	}
+	
+	/**
+	 * Returns the id of the successfully edited meeting
+	 * or null if the meeting cannot be edited.
+	 * @param List&lt;Arguments&gt;
+	 * @return boolean
+	 */
+	public boolean editMeeting(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L200">						String meetingId = &quot;&quot;;</span>
+<span class="fc" id="L201">						String date = &quot;&quot;;</span>
+<span class="fc" id="L202">						String startTime = &quot;&quot;;</span>
+<span class="fc" id="L203">						String endTime = &quot;&quot;;</span>
+<span class="fc" id="L204">						String room = &quot;&quot;;</span>
+<span class="fc" id="L205">						String description = &quot;&quot;;</span>
+		
+<span class="fc" id="L207">		Meeting m = new Meeting();</span>
+		try {
+<span class="fc bfc" id="L209" title="All 2 branches covered.">			for (Arguments a : aList) {</span>
+<span class="pc bpc" id="L210" title="7 of 19 branches missed.">				switch (a.name) {</span>
+					case &quot;meeting-id&quot;:
+<span class="fc" id="L212">						meetingId = a.value;</span>
+<span class="fc" id="L213">						break;</span>
+					case &quot;date&quot; :
+<span class="fc" id="L215">						date = a.value;</span>
+<span class="fc" id="L216">						break;</span>
+					case &quot;start-time&quot;:
+<span class="fc" id="L218">						startTime = a.value;</span>
+<span class="fc" id="L219">						break;</span>
+					case &quot;end-time&quot;:
+<span class="fc" id="L221">						endTime = a.value;</span>
+<span class="fc" id="L222">						break;</span>
+					case &quot;room-id&quot;:
+<span class="fc" id="L224">						room = a.value;</span>
+<span class="fc" id="L225">						break;</span>
+					case &quot;description&quot;:
+<span class="fc" id="L227">						description = a.value;</span>
+						break;
+				}
+			}
+			
+<span class="fc" id="L232">			m.setId(meetingId);</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">			if (!date.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L234">				m.setDate(date);</span>
+			}
+<span class="fc bfc" id="L236" title="All 2 branches covered.">			if (!startTime.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L237">				m.setStartTime(startTime);</span>
+			}
+<span class="fc bfc" id="L239" title="All 2 branches covered.">			if (!endTime.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L240">				m.setEndTime(endTime);</span>
+			}
+<span class="fc bfc" id="L242" title="All 2 branches covered.">			if (!room.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L243">				m.setRoom(room);</span>
+			}
+<span class="fc bfc" id="L245" title="All 2 branches covered.">			if (!description.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L246">				m.setDescription(description);</span>
+			}
+			
+<span class="fc" id="L249">			return events.editMeeting(m);</span>
+<span class="nc" id="L250">		} catch (MeetingException e) {</span>
+//			hasError = true;
+<span class="nc" id="L252">			System.out.println(e.getMessage());</span>
+<span class="nc" id="L253">			return false;</span>
+		}	
+		
+	}
+	
+	/**
+	 * Returns the id of the successfully added attendees for meeting
+	 * or null if the attendees cannot be added.
+	 * @param List&lt;Arguments&gt;
+	 * @return boolean
+	 */
+	public boolean editMeetingAddAttendee(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L265">		Meeting m = new Meeting();</span>
+<span class="fc" id="L266">		String meetingId = &quot;&quot;;</span>
+<span class="fc" id="L267">		String attendee = &quot;&quot;;</span>
+		try {
+<span class="fc bfc" id="L269" title="All 2 branches covered.">			for (Arguments a : aList) {</span>
+<span class="pc bpc" id="L270" title="3 of 7 branches missed.">				switch (a.name) {</span>
+				case &quot;meeting-id&quot; :
+<span class="fc" id="L272">					meetingId = a.value;</span>
+<span class="fc" id="L273">					break;</span>
+				case &quot;attendee&quot; :
+<span class="fc" id="L275">					attendee = a.value;</span>
+					break;
+				}
+			}
+<span class="fc" id="L279">			m.setId(meetingId);</span>
+<span class="fc" id="L280">			m.setAttendee(attendee);</span>
+<span class="fc" id="L281">			return events.editMeetingAddAttendee(m);</span>
+			
+<span class="nc" id="L283">		} catch (MeetingException e) {</span>
+<span class="nc" id="L284">			System.out.println(e.getMessage());</span>
+<span class="nc" id="L285">			return false;</span>
+		}
+	}
+	
+	/**
+	 * Returns the id of the successfully added attendees for meeting
+	 * or null if the attendees cannot be added.
+	 * @param List&lt;Arguments&gt;
+	 * @return boolean
+	 */
+	public boolean editMeetingRemoveAttendee(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L296">		Meeting m = new Meeting();</span>
+<span class="fc" id="L297">		String meetingId = &quot;&quot;;</span>
+<span class="fc" id="L298">		String attendee = &quot;&quot;;</span>
+		try {
+<span class="fc bfc" id="L300" title="All 2 branches covered.">			for (Arguments a : aList) {</span>
+<span class="pc bpc" id="L301" title="3 of 7 branches missed.">				switch (a.name) {</span>
+				case &quot;meeting-id&quot; :
+<span class="fc" id="L303">					meetingId = a.value;</span>
+<span class="fc" id="L304">					break;</span>
+				case &quot;attendee&quot; :
+<span class="fc" id="L306">					attendee = a.value;</span>
+					break;
+				}
+			}
+<span class="fc" id="L310">			m.setId(meetingId);</span>
+<span class="fc" id="L311">			m.setAttendee(attendee);</span>
+<span class="fc" id="L312">			return events.editMeetingRemoveAttendee(m);</span>
+			
+<span class="nc" id="L314">		} catch (MeetingException e) {</span>
+<span class="nc" id="L315">			System.out.println(e.getMessage());</span>
+<span class="nc" id="L316">			return false;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

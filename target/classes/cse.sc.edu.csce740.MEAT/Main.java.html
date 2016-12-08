@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import cse.sc.edu.csce740.MEAT.exception.HolidayException;
+import cse.sc.edu.csce740.MEAT.exception.MeetingException;
+import cse.sc.edu.csce740.MEAT.exception.VacationException;
+
+<span class="nc" id="L12">public class Main {</span>
+	private static EventScheduler eventScheduler;
+	private static int meetingId;
+	private static ParseJSON parseJSON;
+	private static EventViewer eventViewer;
+	
+	/**
+	 * 
+	 * @author Cizhen Wu / Wenzhi Cai
+	 *
+	 * Starts the console UI for MEAT
+	 */
+	private static void mainMenu() {
+		//System.out.println(&quot;1. Choose file input&quot;);
+<span class="nc" id="L26">        System.out.println(&quot;1. Choose mannual input&quot;);</span>
+<span class="nc" id="L27">        System.out.println(&quot;0. Exit&quot;);</span>
+        
+        //Get user input
+        try {
+<span class="nc" id="L31">        	int userInput = Integer.parseInt(inputOutput(&quot;Please press the number that corresponds to what you would like MEAT to do.&quot;));</span>
+        	
+<span class="nc bnc" id="L33" title="All 4 branches missed.">        	if (userInput &gt;= 0 &amp;&amp; userInput &lt;= 1) {</span>
+		        //if (userInput == 1) processFile();
+<span class="nc bnc" id="L35" title="All 2 branches missed.">		        if (userInput == 1) showMenu();</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">		        if (userInput == 0) System.exit(0);</span>
+<span class="nc" id="L37">        	} else {</span>
+<span class="nc" id="L38">        		System.out.println(&quot;Please enter a number from 0 - 2&quot;);</span>
+<span class="nc" id="L39">            	mainMenu();</span>
+        	}
+<span class="nc" id="L41">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L42">        	System.out.println(&quot;Please enter a number from 0 - 2&quot;);</span>
+<span class="nc" id="L43">        	mainMenu();</span>
+        }
+<span class="nc" id="L45">	}</span>
+	
+	/**
+     * Asks users to input a file path
+     * @return void
+     */
+	private static void processFile(String userInput) {
+		//Get user input
+        try {
+//        	String userInput = inputOutput(&quot;Please enter the JSON file you would like to process or press 0 to go back to main menu.&quot;);
+//        	String output = &quot;&quot;;
+<span class="nc" id="L56">        	boolean isSuccess = false;</span>
+        	
+<span class="nc bnc" id="L58" title="All 4 branches missed.">        	if (userInput != null &amp;&amp; userInput != &quot;&quot;) {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        		if (userInput.equals(&quot;0&quot;)) {</span>
+<span class="nc" id="L60">        			mainMenu();</span>
+<span class="nc" id="L61">        			return;</span>
+        		} 
+<span class="nc" id="L63">        		List&lt;ParseObject&gt; list = parseJSON.readFile(userInput);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        		for (ParseObject pObj : list) {</span>
+<span class="nc bnc" id="L65" title="All 31 branches missed.">        			switch (pObj.name) {</span>
+        				case &quot;add-meeting&quot;:
+<span class="nc" id="L67">        					isSuccess = eventScheduler.addMeeting(pObj.aList);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        					if (isSuccess) {</span>
+<span class="nc" id="L69">        						System.out.println(&quot;Successfully add meeting.&quot;);</span>
+<span class="nc" id="L70">        					} else {</span>
+<span class="nc" id="L71">        						System.out.println(&quot;Add meeting failed.&quot;);</span>
+        					}
+<span class="nc" id="L73">        					break;</span>
+        				case &quot;edit-meeting-details&quot;:
+<span class="nc" id="L75">        					isSuccess = eventScheduler.editMeeting(pObj.aList);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        					if (isSuccess) {</span>
+<span class="nc" id="L77">        						System.out.println(&quot;Successfully edit meeting.&quot;);</span>
+<span class="nc" id="L78">        					} else {</span>
+<span class="nc" id="L79">        						System.out.println(&quot;Edit meeting failed.&quot;);</span>
+        					}
+<span class="nc" id="L81">        					break;</span>
+        				case &quot;edit-meeting-add-attendees&quot;: 
+<span class="nc" id="L83">        					isSuccess = eventScheduler.editMeetingAddAttendee(pObj.aList);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        					if (isSuccess) {</span>
+<span class="nc" id="L85">        						System.out.println(&quot;Successfully edit meeting add attendee.&quot;);</span>
+<span class="nc" id="L86">        					} else {</span>
+<span class="nc" id="L87">        						System.out.println(&quot;Edit meeting add attendee failed.&quot;);</span>
+        					}
+<span class="nc" id="L89">        					break;</span>
+        				case &quot;edit-meeting-remove-attendees &quot;:
+<span class="nc" id="L91">        					isSuccess = eventScheduler.editMeetingRemoveAttendee(pObj.aList);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        					if (isSuccess) {</span>
+<span class="nc" id="L93">        						System.out.println(&quot;Successfully edit meeting remove attendee.&quot;);</span>
+<span class="nc" id="L94">        					} else {</span>
+<span class="nc" id="L95">        						System.out.println(&quot;Remove attendee failed.&quot;);</span>
+        					}
+<span class="nc" id="L97">        					break;</span>
+        				case &quot;delete-meeting&quot;:
+<span class="nc" id="L99">        					isSuccess = eventScheduler.deleteMeeting(pObj.aList);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        					if (isSuccess) {</span>
+<span class="nc" id="L101">        						System.out.println(&quot;Successfully delete meeting.&quot;);</span>
+<span class="nc" id="L102">        					} else {</span>
+<span class="nc" id="L103">        						System.out.println(&quot;Delete meeting failed.&quot;);</span>
+        					}
+<span class="nc" id="L105">        					break;</span>
+        				case &quot;add-vacation&quot;:
+<span class="nc" id="L107">        					isSuccess = eventScheduler.addVacation(pObj.aList);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        					if (isSuccess) {</span>
+<span class="nc" id="L109">        						System.out.println(&quot;Successfully add vacation.&quot;);</span>
+<span class="nc" id="L110">        					} else {</span>
+<span class="nc" id="L111">        						System.out.println(&quot;Add vacation failed.&quot;);</span>
+        					}
+<span class="nc" id="L113">        					break;</span>
+        				case &quot;add-holiday&quot;:
+<span class="nc" id="L115">        					isSuccess = eventScheduler.addHoliday(pObj.aList);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        					if (isSuccess) {</span>
+<span class="nc" id="L117">        						System.out.println(&quot;Successfully add holiday.&quot;);</span>
+<span class="nc" id="L118">        					} else {</span>
+<span class="nc" id="L119">        						System.out.println(&quot;Add holiday failed.&quot;);</span>
+        					}
+<span class="nc" id="L121">        					break;</span>
+        				case &quot;print-schedule-all&quot;:
+<span class="nc" id="L123">        					isSuccess = eventViewer.printScheduleAll(pObj.aList);</span>
+<span class="nc" id="L124">        					break;</span>
+        				case &quot;print-schedule-employee&quot;:
+<span class="nc" id="L126">        					isSuccess = eventViewer.printScheduleEmployee(pObj.aList);</span>
+<span class="nc" id="L127">        					break;</span>
+        				case &quot;print-schedule-room&quot;:
+<span class="nc" id="L129">        					isSuccess = eventViewer.printScheduleRoom(pObj.aList);</span>
+        					break;	
+        			}
+        		}
+<span class="nc" id="L133">        		mainMenu();</span>
+<span class="nc" id="L134">        	} else {</span>
+<span class="nc" id="L135">        		System.out.println(&quot;Please enter a valid file path.&quot;);</span>
+<span class="nc" id="L136">            	mainMenu();</span>
+        	}
+<span class="nc" id="L138">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L139">        	System.out.println(&quot;Please enter a valid file path.&quot;);</span>
+//        	processFile();
+        }
+<span class="nc" id="L142">	}</span>
+	
+	/**
+     * Shows the main menu for mannual input
+     * @return void
+     */
+	private static void showMenu() {
+<span class="nc" id="L149">		System.out.println(&quot;1. Add a meeting&quot;);</span>
+<span class="nc" id="L150">        System.out.println(&quot;2. Edit an existing meeting&quot;);</span>
+<span class="nc" id="L151">        System.out.println(&quot;3. Add attendees to an existing meeting&quot;);</span>
+<span class="nc" id="L152">        System.out.println(&quot;4. Remove attendees to an existing meeting&quot;);</span>
+<span class="nc" id="L153">        System.out.println(&quot;5. Delete a meeting&quot;);</span>
+<span class="nc" id="L154">        System.out.println(&quot;6. Add a vacation&quot;);</span>
+<span class="nc" id="L155">        System.out.println(&quot;7. Add a holiday&quot;);</span>
+<span class="nc" id="L156">        System.out.println(&quot;8. Print all schedule&quot;);</span>
+<span class="nc" id="L157">        System.out.println(&quot;9. Print schedule of an employee&quot;);</span>
+<span class="nc" id="L158">        System.out.println(&quot;10. Print schedule of a room&quot;);</span>
+<span class="nc" id="L159">        System.out.println(&quot;0. Back to previous menu&quot;);</span>
+        
+        //Get user input
+        try {
+<span class="nc" id="L163">        	int userInput = Integer.parseInt(inputOutput(&quot;Please press the number that corresponds to what you would like MEAT to do.&quot;));</span>
+        	
+<span class="nc bnc" id="L165" title="All 4 branches missed.">        	if (userInput &gt;= 0 &amp;&amp; userInput &lt;= 10) {</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">		        if (userInput == 1) addMeeting();</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">		        if (userInput == 2) editMeeting();</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">		        if (userInput == 3) editMeetingAddAttendee();</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">		        if (userInput == 4) editMeetingRemoveAttendee();</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">		        if (userInput == 5) deleteMeeting();</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">		        if (userInput == 6) addVacation();</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">		        if (userInput == 7) addHoliday();</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">		        if (userInput == 8) printScheduleAll();</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">		        if (userInput == 9) printScheduleEmployee();</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">		        if (userInput == 10) printScheduleRoom();</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">		        if (userInput == 0) mainMenu();</span>
+<span class="nc" id="L177">        	} else {</span>
+<span class="nc" id="L178">        		System.out.println(&quot;Please enter a number from 0 - 10&quot;);</span>
+<span class="nc" id="L179">        		showMenu();</span>
+        	}
+<span class="nc" id="L181">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L182">        	System.out.println(&quot;Please enter a number from 0 - 10&quot;);</span>
+<span class="nc" id="L183">        	showMenu();</span>
+        }
+<span class="nc" id="L185">	}</span>
+	
+	/**
+     * Performs add meetings to the system
+     * @return void
+     */
+	private static void addMeeting() {
+		//Read in meeting date
+<span class="nc" id="L193">		String pDate = inputOutput(&quot;\nPlease enter the date of meeting to add, formatted as MMDDYYYY: &quot;);</span>
+		//Read in meeting start time
+<span class="nc" id="L195">		String pStartTime = inputOutput(&quot;\nPlease enter the start time of meeting to add, formatted as HH:MM: &quot;);</span>
+		//Read in meeting end time
+<span class="nc" id="L197">		String pEndTime = inputOutput(&quot;\nPlease enter the end time of meeting to add, formatted as HH:MM: &quot;);</span>
+		//Read in meeting room id
+<span class="nc" id="L199">		String pRoomId = inputOutput(&quot;\nPlease enter the room id of meeting to add: &quot;);</span>
+		//Read in meeting attendee
+<span class="nc" id="L201">		String pAttendee = inputOutput(&quot;\nPlease enter the attendee of meeting to add, if there are more than one attendee, use comma for seperation: &quot;);</span>
+		//Read in meeting description
+<span class="nc" id="L203">		String pDescription = inputOutput(&quot;\nPlease enter the description of meeting to add: &quot;);</span>
+//		
+<span class="nc" id="L205">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L206">		Arguments a = new Arguments(&quot;date&quot;, pDate);</span>
+<span class="nc" id="L207">		aList.add(a);</span>
+<span class="nc" id="L208">		a = new Arguments(&quot;start-time&quot;, pStartTime);</span>
+<span class="nc" id="L209">		aList.add(a);</span>
+<span class="nc" id="L210">		a = new Arguments(&quot;end-time&quot;, pEndTime);</span>
+<span class="nc" id="L211">		aList.add(a);</span>
+<span class="nc" id="L212">		a = new Arguments(&quot;room-id&quot;, pRoomId);</span>
+<span class="nc" id="L213">		aList.add(a);</span>
+<span class="nc" id="L214">		a = new Arguments(&quot;attendee&quot;, pAttendee);</span>
+<span class="nc" id="L215">		aList.add(a);</span>
+<span class="nc" id="L216">		a = new Arguments(&quot;description&quot;, pDescription);</span>
+<span class="nc" id="L217">		aList.add(a);</span>
+		
+<span class="nc" id="L219">		boolean isAdded = eventScheduler.addMeeting(aList);</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">		if (isAdded) {</span>
+<span class="nc" id="L221">			System.out.print(&quot;Meeting successsfully added!\n&quot;);	</span>
+<span class="nc" id="L222">		} else {</span>
+<span class="nc" id="L223">			System.out.print(&quot;Meeting not added!\n&quot;);</span>
+		}
+<span class="nc" id="L225">		mainMenu();</span>
+<span class="nc" id="L226">	}</span>
+	
+	/**
+     * Performs edit meeting details to the system
+     * @return void
+     */
+	private static void editMeeting() {
+<span class="nc" id="L233">		List&lt;List&lt;String&gt;&gt; meetings = eventScheduler.getMeetings();</span>
+<span class="nc" id="L234">		System.out.println(&quot;Existing meetings in meeting databse:&quot;);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">		for (List&lt;String&gt; meeting : meetings) {</span>
+<span class="nc" id="L236">			System.out.println(&quot;Meeting ID: &quot; + meeting.get(0));</span>
+<span class="nc" id="L237">			System.out.println(&quot;Meeting date: &quot; + meeting.get(1));</span>
+<span class="nc" id="L238">			System.out.println(&quot;Start time: &quot; + meeting.get(2));</span>
+<span class="nc" id="L239">			System.out.println(&quot;End time: &quot; + meeting.get(3));</span>
+<span class="nc" id="L240">			System.out.println(&quot;Attendee(s): &quot; + meeting.get(4));</span>
+<span class="nc" id="L241">			System.out.println(&quot;Description: &quot; + meeting.get(5));</span>
+<span class="nc" id="L242">			System.out.println(&quot;Room Id: &quot; + meeting.get(6));</span>
+<span class="nc" id="L243">			System.out.println(&quot;\n&quot;);</span>
+		}
+		
+		//Read in meeting id
+<span class="nc" id="L247">		String pMeetingId = inputOutput(&quot;\nPlease enter the id of meeting to edit: &quot;);</span>
+		//Read in meeting date
+<span class="nc" id="L249">		String pDate = inputOutput(&quot;\nPlease enter the date of meeting to edit, formatted as MMDDYYYY: &quot;);</span>
+		//Read in meeting start time
+<span class="nc" id="L251">		String pStartTime = inputOutput(&quot;\nPlease enter the start time of meeting to add, formatted as HH:MM: &quot;);</span>
+		//Read in meeting end time
+<span class="nc" id="L253">		String pEndTime = inputOutput(&quot;\nPlease enter the end time of meeting to add, formatted as HH:MM: &quot;);</span>
+		//Read in meeting room id
+<span class="nc" id="L255">		String pRoomId = inputOutput(&quot;\nPlease enter the room id of meeting to add: &quot;);</span>
+		//Read in meeting description
+<span class="nc" id="L257">		String pDescription = inputOutput(&quot;\nPlease enter the description of meeting to add: &quot;);</span>
+		
+<span class="nc" id="L259">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L260">		Arguments a = new Arguments(&quot;date&quot;, pDate);</span>
+<span class="nc" id="L261">		aList.add(a);</span>
+<span class="nc" id="L262">		a = new Arguments(&quot;meeting-id&quot;, pMeetingId);</span>
+<span class="nc" id="L263">		aList.add(a);</span>
+<span class="nc" id="L264">		a = new Arguments(&quot;start-time&quot;, pStartTime);</span>
+<span class="nc" id="L265">		aList.add(a);</span>
+<span class="nc" id="L266">		a = new Arguments(&quot;end-time&quot;, pEndTime);</span>
+<span class="nc" id="L267">		aList.add(a);</span>
+<span class="nc" id="L268">		a = new Arguments(&quot;room-id&quot;, pRoomId);</span>
+<span class="nc" id="L269">		aList.add(a);</span>
+<span class="nc" id="L270">		a = new Arguments(&quot;description&quot;, pDescription);</span>
+<span class="nc" id="L271">		aList.add(a);</span>
+		
+<span class="nc" id="L273">		boolean isAdded = eventScheduler.editMeeting(aList);</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">		if (isAdded) {</span>
+<span class="nc" id="L275">			System.out.print(&quot;Meeting successsfully edited!\n&quot;);	</span>
+<span class="nc" id="L276">		} else {</span>
+<span class="nc" id="L277">			System.out.print(&quot;Meeting not edited!\n&quot;);</span>
+		}
+<span class="nc" id="L279">		mainMenu();</span>
+<span class="nc" id="L280">	}</span>
+	
+	
+	/**
+     * Performs edit meeting - add attendee to the system
+     * @return void
+     */
+	private static void editMeetingAddAttendee() {
+<span class="nc" id="L288">		List&lt;List&lt;String&gt;&gt; meetings = eventScheduler.getMeetings();</span>
+<span class="nc" id="L289">		System.out.println(&quot;Existing meetings in meeting databse:&quot;);</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">		for (List&lt;String&gt; meeting : meetings) {</span>
+<span class="nc" id="L291">			System.out.println(&quot;Meeting ID: &quot; + meeting.get(0));</span>
+<span class="nc" id="L292">			System.out.println(&quot;Meeting date: &quot; + meeting.get(1));</span>
+<span class="nc" id="L293">			System.out.println(&quot;Start time: &quot; + meeting.get(2));</span>
+<span class="nc" id="L294">			System.out.println(&quot;End time: &quot; + meeting.get(3));</span>
+<span class="nc" id="L295">			System.out.println(&quot;Attendee(s): &quot; + meeting.get(4));</span>
+<span class="nc" id="L296">			System.out.println(&quot;Description: &quot; + meeting.get(5));</span>
+<span class="nc" id="L297">			System.out.println(&quot;\n&quot;);</span>
+		}
+		
+		//Read in meeting id
+<span class="nc" id="L301">		String pMeetingId = inputOutput(&quot;\nPlease enter the id of meeting to edit: &quot;);</span>
+		//Read in attendee
+<span class="nc" id="L303">		String pAttendee = inputOutput(&quot;\nPlease enter attendee edit: &quot;);</span>
+		
+<span class="nc" id="L305">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L306">		Arguments a = new Arguments(&quot;meeting-id&quot;, pMeetingId);</span>
+<span class="nc" id="L307">		aList.add(a);</span>
+<span class="nc" id="L308">		a = new Arguments(&quot;attendee&quot;, pAttendee);</span>
+<span class="nc" id="L309">		aList.add(a);</span>
+		
+<span class="nc" id="L311">		boolean isAdded = eventScheduler.editMeetingAddAttendee(aList);</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">		if (isAdded) {</span>
+<span class="nc" id="L313">			System.out.print(&quot;Attendee successsfully added!\n&quot;);	</span>
+<span class="nc" id="L314">		} else {</span>
+<span class="nc" id="L315">			System.out.print(&quot;Attendee not added!\n&quot;);</span>
+		}
+<span class="nc" id="L317">		mainMenu();</span>
+<span class="nc" id="L318">	}</span>
+	
+	/**
+     * Performs edit meeting - remove attendee to the system
+     * @return void
+     */
+	private static void editMeetingRemoveAttendee() {
+		//show existing meetings
+<span class="nc" id="L326">		List&lt;List&lt;String&gt;&gt; meetings = eventScheduler.getMeetings();</span>
+<span class="nc" id="L327">		System.out.println(&quot;Existing meetings in meeting databse:&quot;);</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">		for (List&lt;String&gt; meeting : meetings) {</span>
+<span class="nc" id="L329">			System.out.println(&quot;Meeting ID: &quot; + meeting.get(0));</span>
+<span class="nc" id="L330">			System.out.println(&quot;Meeting date: &quot; + meeting.get(1));</span>
+<span class="nc" id="L331">			System.out.println(&quot;Start time: &quot; + meeting.get(2));</span>
+<span class="nc" id="L332">			System.out.println(&quot;End time: &quot; + meeting.get(3));</span>
+<span class="nc" id="L333">			System.out.println(&quot;Attendee(s): &quot; + meeting.get(4));</span>
+<span class="nc" id="L334">			System.out.println(&quot;Description: &quot; + meeting.get(5));</span>
+<span class="nc" id="L335">			System.out.println(&quot;\n&quot;);</span>
+		}
+		//Read in meeting id
+<span class="nc" id="L338">		String pMeetingId = inputOutput(&quot;\nPlease enter the id of meeting to edit: &quot;);</span>
+		//Read in attendee
+<span class="nc" id="L340">		String pAttendee = inputOutput(&quot;\nPlease enter attendee remove: &quot;);</span>
+		
+<span class="nc" id="L342">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L343">		Arguments a = new Arguments(&quot;meeting-id&quot;, pMeetingId);</span>
+<span class="nc" id="L344">		aList.add(a);</span>
+<span class="nc" id="L345">		a = new Arguments(&quot;attendee&quot;, pAttendee);</span>
+<span class="nc" id="L346">		aList.add(a);</span>
+		
+<span class="nc" id="L348">		boolean isAdded = eventScheduler.editMeetingRemoveAttendee(aList);</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">		if (isAdded) {</span>
+<span class="nc" id="L350">			System.out.print(&quot;Attendee successsfully removed!\n&quot;);	</span>
+<span class="nc" id="L351">		} else {</span>
+<span class="nc" id="L352">			System.out.print(&quot;Attendee not removed!\n&quot;);</span>
+		}
+<span class="nc" id="L354">		mainMenu();</span>
+<span class="nc" id="L355">	}</span>
+	
+	/**
+     * Deletes a meeting from the system
+     * @return void
+     */
+	private static void deleteMeeting() {
+		//show existing meetings
+<span class="nc" id="L363">		List&lt;List&lt;String&gt;&gt; meetings = eventScheduler.getMeetings();</span>
+<span class="nc bnc" id="L364" title="All 2 branches missed.">		if (meetings.size() != 0) {</span>
+<span class="nc" id="L365">			System.out.println(&quot;Existing meetings in meeting databse:&quot;);</span>
+<span class="nc bnc" id="L366" title="All 2 branches missed.">			for (List&lt;String&gt; meeting : meetings) {</span>
+<span class="nc" id="L367">				System.out.println(&quot;Meeting ID: &quot; + meeting.get(0));</span>
+<span class="nc" id="L368">				System.out.println(&quot;Meeting date: &quot; + meeting.get(1));</span>
+<span class="nc" id="L369">				System.out.println(&quot;Start time: &quot; + meeting.get(2));</span>
+<span class="nc" id="L370">				System.out.println(&quot;End time: &quot; + meeting.get(3));</span>
+<span class="nc" id="L371">				System.out.println(&quot;Attendee(s): &quot; + meeting.get(4));</span>
+<span class="nc" id="L372">				System.out.println(&quot;Description: &quot; + meeting.get(5));</span>
+<span class="nc" id="L373">				System.out.println(&quot;\n&quot;);</span>
+			}
+		}
+		
+		//Read in meeting id
+<span class="nc" id="L378">		String pMeetingId = inputOutput(&quot;\nPlease enter the id of meeting to delete: &quot;);</span>
+		
+<span class="nc" id="L380">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L381">		Arguments a = new Arguments(&quot;meeting-id&quot;, pMeetingId);</span>
+<span class="nc" id="L382">		aList.add(a);</span>
+	
+<span class="nc" id="L384">		boolean isAdded = eventScheduler.deleteMeeting(aList);</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">		if (isAdded) {</span>
+<span class="nc" id="L386">			System.out.print(&quot;Meeting successsfully deleted!\n&quot;);	</span>
+<span class="nc" id="L387">		} else {</span>
+<span class="nc" id="L388">			System.out.print(&quot;Meeting not deleted!\n&quot;);</span>
+		}
+<span class="nc" id="L390">		mainMenu();</span>
+<span class="nc" id="L391">	}</span>
+	
+	/**
+     * Adds a vacation to the system
+     * @return void
+     */
+	private static void addVacation() {
+		//display vacations in the vacation database
+<span class="nc" id="L399">		List&lt;List&lt;String&gt;&gt; vacations = eventScheduler.getVacations();</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">		if (vacations.size() != 0) {</span>
+<span class="nc" id="L401">			System.out.println(&quot;Existing vacations in vacation databse:&quot;);</span>
+<span class="nc bnc" id="L402" title="All 2 branches missed.">			for (List&lt;String&gt; vacation : vacations) {</span>
+<span class="nc" id="L403">				System.out.println(&quot;Employee id: &quot; + vacation.get(0));</span>
+<span class="nc" id="L404">				System.out.println(&quot;Start time: &quot; + vacation.get(1));</span>
+<span class="nc" id="L405">				System.out.println(&quot;End time: &quot; + vacation.get(2));</span>
+<span class="nc" id="L406">				System.out.println(&quot;Description: &quot; + vacation.get(3));</span>
+<span class="nc" id="L407">				System.out.println(&quot;\n&quot;);</span>
+			}
+		}
+	
+		//Read in the employee id
+<span class="nc" id="L412">		String pEmployeeId = inputOutput(&quot;\nPlease enter the employee id: &quot;);</span>
+		//Read in vacation start date
+<span class="nc" id="L414">		String pStartDate = inputOutput(&quot;\nPlease enter the start date of vacation to add, formatted as MMDDYYYY: &quot;);</span>
+		//Read in vacation start date
+<span class="nc" id="L416">		String pEndDate = inputOutput(&quot;\nPlease enter the end date of vacation to add, formatted as MMDDYYYY: &quot;);</span>
+		//Read in vacation description
+<span class="nc" id="L418">		String pDescription = inputOutput(&quot;\nPlease enter the description of vacation to add: &quot;);</span>
+		
+<span class="nc" id="L420">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L421">		Arguments a = new Arguments(&quot;employee-id&quot;, pEmployeeId);</span>
+<span class="nc" id="L422">		aList.add(a);</span>
+<span class="nc" id="L423">		a = new Arguments(&quot;start-date&quot;, pStartDate);</span>
+<span class="nc" id="L424">		aList.add(a);</span>
+<span class="nc" id="L425">		a = new Arguments(&quot;end-date&quot;, pEndDate);</span>
+<span class="nc" id="L426">		aList.add(a);</span>
+<span class="nc" id="L427">		a = new Arguments(&quot;description&quot;, pDescription);</span>
+<span class="nc" id="L428">		aList.add(a);</span>
+		
+<span class="nc" id="L430">		boolean isAdded = eventScheduler.addVacation(aList);</span>
+<span class="nc bnc" id="L431" title="All 2 branches missed.">		if (isAdded) {</span>
+<span class="nc" id="L432">			System.out.print(&quot;Vacation successsfully added!\n&quot;);	</span>
+<span class="nc" id="L433">		} else {</span>
+<span class="nc" id="L434">			System.out.print(&quot;Vacation not added!\n&quot;);</span>
+		}
+<span class="nc" id="L436">		mainMenu();</span>
+<span class="nc" id="L437">	}</span>
+	
+	/**
+     * Adds a holiday to the system
+     * @return void
+     */
+	private static void addHoliday() {
+		//display vacations in the vacation database
+<span class="nc" id="L445">		List&lt;List&lt;String&gt;&gt; holidays = eventScheduler.getHolidays();</span>
+<span class="nc bnc" id="L446" title="All 2 branches missed.">		if (holidays.size() != 0) {</span>
+<span class="nc" id="L447">			System.out.println(&quot;Existing holidays in holiday databse:&quot;);</span>
+<span class="nc bnc" id="L448" title="All 2 branches missed.">			for (List&lt;String&gt; holiday : holidays) {</span>
+<span class="nc" id="L449">				System.out.println(&quot;Start date: &quot; + holiday.get(0));</span>
+<span class="nc" id="L450">				System.out.println(&quot;End date: &quot; + holiday.get(1));</span>
+<span class="nc" id="L451">				System.out.println(&quot;Description: &quot; + holiday.get(2));</span>
+<span class="nc" id="L452">				System.out.println(&quot;\n&quot;);</span>
+			}
+		}
+
+		//Read in holiday start date
+<span class="nc" id="L457">		String pStartDate = inputOutput(&quot;\nPlease enter the start date of holiday to add, formatted as MMDDYYYY: &quot;);</span>
+		//Read in holiday start date
+<span class="nc" id="L459">		String pEndDate = inputOutput(&quot;\nPlease enter the end date of holiday to add, formatted as MMDDYYYY: &quot;);</span>
+		//Read in holiday description
+<span class="nc" id="L461">		String pDescription = inputOutput(&quot;\nPlease enter the description of holiday to add: &quot;);</span>
+		
+<span class="nc" id="L463">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L464">		Arguments a = new Arguments(&quot;start-date&quot;, pStartDate);</span>
+<span class="nc" id="L465">		aList.add(a);</span>
+<span class="nc" id="L466">		a = new Arguments(&quot;end-date&quot;, pEndDate);</span>
+<span class="nc" id="L467">		aList.add(a);</span>
+<span class="nc" id="L468">		a = new Arguments(&quot;description&quot;, pDescription);</span>
+<span class="nc" id="L469">		aList.add(a);</span>
+		
+<span class="nc" id="L471">		boolean isAdded = eventScheduler.addHoliday(aList);</span>
+<span class="nc bnc" id="L472" title="All 2 branches missed.">		if (isAdded) {</span>
+<span class="nc" id="L473">			System.out.print(&quot;Holiday successsfully added!\n&quot;);	</span>
+<span class="nc" id="L474">		} else {</span>
+<span class="nc" id="L475">			System.out.print(&quot;Holiday not added!\n&quot;);</span>
+		}
+<span class="nc" id="L477">		mainMenu();</span>
+<span class="nc" id="L478">	}</span>
+	
+	/**
+     * Prints the universal schedule
+     * @return void
+     */
+	private static void printScheduleAll() {
+		//Read in schecdule start date
+<span class="nc" id="L486">		String pStartDate = inputOutput(&quot;\nPlease enter the start date of schedule to print, formatted as MMDDYYYY: &quot;);</span>
+		//Read in schedule start date
+<span class="nc" id="L488">		String pEndDate = inputOutput(&quot;\nPlease enter the end date of schedule to print, formatted as MMDDYYYY: &quot;);</span>
+		//Read in output file name
+<span class="nc" id="L490">		String pOutputFile = inputOutput(&quot;\nPlease enter the output file name, formatted as filename.json: &quot;);</span>
+
+<span class="nc" id="L492">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L493">		Arguments a = new Arguments(&quot;start-date&quot;, pStartDate);</span>
+<span class="nc" id="L494">		aList.add(a);</span>
+<span class="nc" id="L495">		a = new Arguments(&quot;end-date&quot;, pEndDate);</span>
+<span class="nc" id="L496">		aList.add(a);</span>
+<span class="nc" id="L497">		a = new Arguments(&quot;output-file&quot;, pOutputFile);</span>
+<span class="nc" id="L498">		aList.add(a);</span>
+		
+<span class="nc" id="L500">		boolean isAdded = eventViewer.printScheduleAll(aList);</span>
+	
+<span class="nc" id="L502">		mainMenu();</span>
+		
+<span class="nc" id="L504">	}</span>
+	
+	/**
+     * Prints the schedule of a room
+     * @return void
+     */
+	private static void printScheduleRoom() {
+		//Read in schecdule start date
+<span class="nc" id="L512">		String pStartDate = inputOutput(&quot;\nPlease enter the start date of room schedule to print, formatted as MMDDYYYY: &quot;);</span>
+		//Read in schedule start date
+<span class="nc" id="L514">		String pEndDate = inputOutput(&quot;\nPlease enter the end date of room schedule to print, formatted as MMDDYYYY: &quot;);</span>
+		//Read in room id
+<span class="nc" id="L516">		String pRoom = inputOutput(&quot;\nPlease enter the room id to print: &quot;);</span>
+	
+<span class="nc" id="L518">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L519">		Arguments a = new Arguments(&quot;start-date&quot;, pStartDate);</span>
+<span class="nc" id="L520">		aList.add(a);</span>
+<span class="nc" id="L521">		a = new Arguments(&quot;end-date&quot;, pEndDate);</span>
+<span class="nc" id="L522">		aList.add(a);</span>
+<span class="nc" id="L523">		a = new Arguments(&quot;room-id&quot;, pRoom);</span>
+<span class="nc" id="L524">		aList.add(a);</span>
+		
+<span class="nc" id="L526">		boolean isAdded = eventViewer.printScheduleRoom(aList);</span>
+	
+<span class="nc" id="L528">		mainMenu();</span>
+<span class="nc" id="L529">	}</span>
+	
+	/**
+     * Prints the schedule of an employee
+     * @return void
+     */
+	private static void printScheduleEmployee() {
+		//Read in schecdule start date
+<span class="nc" id="L537">		String pStartDate = inputOutput(&quot;\nPlease enter the start date of employee schedule to print, formatted as MMDDYYYY: &quot;);</span>
+		//Read in schedule start date
+<span class="nc" id="L539">		String pEndDate = inputOutput(&quot;\nPlease enter the end date of employee schedule to print, formatted as MMDDYYYY: &quot;);</span>
+		//Read in room id
+<span class="nc" id="L541">		String pEmployeeId = inputOutput(&quot;\nPlease enter the employee id to print: &quot;);</span>
+	
+<span class="nc" id="L543">		List&lt;Arguments&gt; aList = new ArrayList&lt;Arguments&gt;();</span>
+<span class="nc" id="L544">		Arguments a = new Arguments(&quot;start-date&quot;, pStartDate);</span>
+<span class="nc" id="L545">		aList.add(a);</span>
+<span class="nc" id="L546">		a = new Arguments(&quot;end-date&quot;, pEndDate);</span>
+<span class="nc" id="L547">		aList.add(a);</span>
+<span class="nc" id="L548">		a = new Arguments(&quot;employee-id&quot;, pEmployeeId);</span>
+<span class="nc" id="L549">		aList.add(a);</span>
+		
+<span class="nc" id="L551">		boolean isAdded = eventViewer.printScheduleEmployee(aList);</span>
+	
+<span class="nc" id="L553">		mainMenu();</span>
+<span class="nc" id="L554">	}</span>
+	
+	/**
+     * Passes a prompt to the user and returns the user specified 
+     * string.
+     * @param message
+     * @return String
+     */
+    private static String inputOutput(String message) {
+<span class="nc" id="L563">        System.out.println(message);</span>
+<span class="nc" id="L564">	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));</span>
+<span class="nc" id="L565">	    String returnString = &quot;&quot;;</span>
+	    try {
+<span class="nc" id="L567">	        returnString = br.readLine();</span>
+<span class="nc" id="L568">	    }</span>
+<span class="nc" id="L569">	    catch (IOException e){</span>
+<span class="nc" id="L570">	        System.out.println(&quot;Error reading in value&quot;);</span>
+<span class="nc" id="L571">	        mainMenu();</span>
+	    }
+<span class="nc" id="L573">	    return returnString;</span>
+    }
+	
+    public static void main(String[] args) {
+<span class="nc" id="L577">    	eventScheduler = new EventScheduler();</span>
+<span class="nc" id="L578">    	meetingId = 0;</span>
+<span class="nc" id="L579">    	parseJSON = new ParseJSON();</span>
+<span class="nc" id="L580">    	eventViewer = new EventViewer();</span>
+    	
+<span class="nc bnc" id="L582" title="All 2 branches missed.">    	if (args.length == 0) {</span>
+<span class="nc" id="L583">    		mainMenu();</span>
+<span class="nc" id="L584">    	} else {</span>
+<span class="nc" id="L585">    		processFile(args[0]);</span>
+    	}
+    	//mainMenu();
+    	
+<span class="nc" id="L589">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

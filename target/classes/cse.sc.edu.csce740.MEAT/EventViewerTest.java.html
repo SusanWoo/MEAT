@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>EventViewerTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">EventViewerTest.java</span></div><h1>EventViewerTest.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
+public class EventViewerTest {
+	private EventViewer ev;
+<span class="fc" id="L12">	List&lt;Arguments&gt; list1 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L13">	List&lt;Arguments&gt; list2 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L14">	List&lt;Arguments&gt; list3 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L15">	List&lt;Arguments&gt; list4 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L16">	List&lt;Arguments&gt; list5 = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L17">	List&lt;Arguments&gt; list6 = new ArrayList&lt;&gt;();</span>
+
+	/**
+	 * Constructor for the test
+	 */
+<span class="fc" id="L22">	public EventViewerTest() {</span>
+<span class="fc" id="L23">		ev = new EventViewer();</span>
+
+		// test case for adding legal universal schedule
+<span class="fc" id="L26">		Arguments a = new Arguments(&quot;start-date&quot;, &quot;11022016&quot;);</span>
+<span class="fc" id="L27">		list1.add(a);</span>
+<span class="fc" id="L28">		a = new Arguments(&quot;end-date&quot;, &quot;12102016&quot;);</span>
+<span class="fc" id="L29">		list1.add(a);</span>
+<span class="fc" id="L30">		a = new Arguments(&quot;output-file&quot;, &quot;out1&quot;);</span>
+<span class="fc" id="L31">		list1.add(a);</span>
+
+		// test case for adding illegal universal schedule
+<span class="fc" id="L34">		Arguments a2 = new Arguments(&quot;start-date&quot;, &quot;11022016&quot;);</span>
+<span class="fc" id="L35">		list2.add(a2);</span>
+<span class="fc" id="L36">		a2 = new Arguments(&quot;end-date&quot;, &quot;&quot;);</span>
+<span class="fc" id="L37">		list2.add(a2);</span>
+<span class="fc" id="L38">		a2 = new Arguments(&quot;output-file&quot;, &quot;&quot;);</span>
+<span class="fc" id="L39">		list2.add(a2);</span>
+
+		// test case for adding legal employee schedule
+<span class="fc" id="L42">		Arguments a3 = new Arguments(&quot;start-date&quot;, &quot;11022016&quot;);</span>
+<span class="fc" id="L43">		list3.add(a3);</span>
+<span class="fc" id="L44">		a3 = new Arguments(&quot;end-date&quot;, &quot;12102016&quot;);</span>
+<span class="fc" id="L45">		list3.add(a3);</span>
+<span class="fc" id="L46">		a3 = new Arguments(&quot;output-file&quot;, &quot;out1&quot;);</span>
+<span class="fc" id="L47">		list3.add(a3);</span>
+<span class="fc" id="L48">		a3 = new Arguments(&quot;employee-id&quot;, &quot;gayxx0627&quot;);</span>
+<span class="fc" id="L49">		list3.add(a3);</span>
+
+		// test case for adding illegal employee schedule
+<span class="fc" id="L52">		Arguments a4 = new Arguments(&quot;start-date&quot;, &quot;&quot;);</span>
+<span class="fc" id="L53">		list4.add(a4);</span>
+<span class="fc" id="L54">		a4 = new Arguments(&quot;end-date&quot;, &quot;12102016&quot;);</span>
+<span class="fc" id="L55">		list4.add(a4);</span>
+<span class="fc" id="L56">		a4 = new Arguments(&quot;output-file&quot;, &quot;out1&quot;);</span>
+<span class="fc" id="L57">		list4.add(a4);</span>
+<span class="fc" id="L58">		a4 = new Arguments(&quot;employee-id&quot;, &quot;&quot;);</span>
+<span class="fc" id="L59">		list4.add(a4);</span>
+
+		// test case for adding legal employee schedule
+<span class="fc" id="L62">		Arguments a5 = new Arguments(&quot;start-date&quot;, &quot;11022016&quot;);</span>
+<span class="fc" id="L63">		list5.add(a5);</span>
+<span class="fc" id="L64">		a5 = new Arguments(&quot;end-date&quot;, &quot;12102016&quot;);</span>
+<span class="fc" id="L65">		list5.add(a5);</span>
+<span class="fc" id="L66">		a5 = new Arguments(&quot;output-file&quot;, &quot;out1&quot;);</span>
+<span class="fc" id="L67">		list5.add(a5);</span>
+<span class="fc" id="L68">		a5 = new Arguments(&quot;room-id&quot;, &quot;3A55&quot;);</span>
+<span class="fc" id="L69">		list5.add(a5);</span>
+
+		// test case for adding illegal employee schedule
+<span class="fc" id="L72">		Arguments a6 = new Arguments(&quot;start-date&quot;, &quot;&quot;);</span>
+<span class="fc" id="L73">		list6.add(a6);</span>
+<span class="fc" id="L74">		a6 = new Arguments(&quot;end-date&quot;, &quot;&quot;);</span>
+<span class="fc" id="L75">		list6.add(a6);</span>
+<span class="fc" id="L76">		a6 = new Arguments(&quot;output-file&quot;, &quot;&quot;);</span>
+<span class="fc" id="L77">		list6.add(a6);</span>
+<span class="fc" id="L78">		a6 = new Arguments(&quot;room-id&quot;, &quot;&quot;);</span>
+<span class="fc" id="L79">		list6.add(a6);</span>
+<span class="fc" id="L80">	}</span>
+
+	@Test
+	public void testPrintScheduleAll() {
+		try {
+<span class="fc" id="L85">			ev.printScheduleAll(list1);</span>
+<span class="pc" id="L86">		} catch (Exception e) {</span>
+
+		}
+<span class="fc" id="L89">		assertFalse(false);</span>
+
+		try {
+<span class="fc" id="L92">			ev.printScheduleAll(list2);</span>
+<span class="pc" id="L93">		} catch (Exception e) {</span>
+
+		}
+<span class="fc" id="L96">		assertFalse(false);</span>
+<span class="fc" id="L97">	}</span>
+
+	@Test
+	public void testPrintScheduleEmployee() {
+		try {
+<span class="fc" id="L102">			ev.printScheduleEmployee(list3);</span>
+<span class="pc" id="L103">		} catch (Exception e) {</span>
+
+		}
+<span class="fc" id="L106">		assertFalse(false);</span>
+
+		try {
+<span class="fc" id="L109">			ev.printScheduleEmployee(list4);</span>
+<span class="pc" id="L110">		} catch (Exception e) {</span>
+
+		}
+<span class="fc" id="L113">		assertFalse(false);</span>
+<span class="fc" id="L114">	}</span>
+
+	@Test
+	public void testPrintScheduleRoom() {
+		try {
+<span class="fc" id="L119">			ev.printScheduleRoom(list5);</span>
+<span class="pc" id="L120">		} catch (Exception e) {</span>
+
+		}
+<span class="fc" id="L123">		assertFalse(false);</span>
+
+		try {
+<span class="fc" id="L126">			ev.printScheduleRoom(list6);</span>
+<span class="pc" id="L127">		} catch (Exception e) {</span>
+
+		}
+<span class="fc" id="L130">		assertFalse(false);</span>
+<span class="fc" id="L131">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

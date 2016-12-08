@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>HolidayTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">HolidayTest.java</span></div><h1>HolidayTest.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+import static org.junit.Assert.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.junit.Test;
+
+import cse.sc.edu.csce740.MEAT.*;
+import cse.sc.edu.csce740.MEAT.exception.HolidayException;
+
+
+<span class="fc" id="L14">public class HolidayTest {</span>
+<span class="fc" id="L15">	Holiday h = new Holiday();</span>
+<span class="fc" id="L16">	Holiday h1 = new Holiday();</span>
+
+<span class="fc" id="L18">	DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyyMMdd&quot;);</span>
+
+	@Test
+	public void testSetDate() {
+		// test length
+		try {
+<span class="nc" id="L24">			h.setStartDate(&quot;2016&quot;);</span>
+<span class="nc" id="L25">			fail();</span>
+<span class="pc" id="L26">		} catch (Exception e) {</span>
+<span class="fc" id="L27">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof HolidayException);</span>
+		}
+		// test month
+		try {
+<span class="nc" id="L31">			h.setStartDate(&quot;13062016&quot;);</span>
+<span class="nc" id="L32">			fail();</span>
+<span class="pc" id="L33">		} catch (Exception e) {</span>
+<span class="fc" id="L34">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof HolidayException);</span>
+		}
+
+		try {
+<span class="nc" id="L38">			h.setStartDate(&quot;00122016&quot;);</span>
+<span class="nc" id="L39">			fail();</span>
+<span class="pc" id="L40">		} catch (Exception e) {</span>
+<span class="fc" id="L41">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof HolidayException);</span>
+		}
+		// test day
+		try {
+<span class="nc" id="L45">			h.setStartDate(&quot;12322016&quot;);</span>
+<span class="nc" id="L46">			fail();</span>
+<span class="pc" id="L47">		} catch (Exception e) {</span>
+<span class="fc" id="L48">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof HolidayException);</span>
+		}
+
+		try {
+<span class="nc" id="L52">			h.setStartDate(&quot;12002016&quot;);</span>
+<span class="nc" id="L53">			fail();</span>
+<span class="pc" id="L54">		} catch (Exception e) {</span>
+<span class="fc" id="L55">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof HolidayException);</span>
+		}
+		// test past
+
+		try {
+<span class="fc" id="L60">			LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L61">			h.setStartDate(&quot;04181800&quot;);</span>
+			// m.setDate(&quot;12012016&quot;);
+			// fail();
+<span class="pc" id="L64">		} catch (Exception e) {</span>
+<span class="nc" id="L65">			assertFalse(&quot;not pass setDateTest&quot;, e instanceof HolidayException);</span>
+		}
+
+		try {
+<span class="fc" id="L69">			LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L70">			h.setStartDate(&quot;12012016&quot;);</span>
+
+<span class="pc" id="L72">		} catch (Exception e) {</span>
+<span class="nc" id="L73">			fail();</span>
+		}
+<span class="fc" id="L75">		assertEquals(20161201, h.getStartDate());</span>
+		
+		
+		// test length
+		try {
+<span class="nc" id="L80">			h.setStartDate(&quot;2016&quot;);</span>
+<span class="nc" id="L81">			fail();</span>
+<span class="pc" id="L82">		} catch (Exception e) {</span>
+<span class="fc" id="L83">			assertTrue(&quot;not pass setEndDate&quot;, e instanceof HolidayException);</span>
+		}
+		// test month
+		try {
+<span class="nc" id="L87">			h.setEndDate(&quot;13062016&quot;);</span>
+<span class="nc" id="L88">			fail();</span>
+<span class="pc" id="L89">		} catch (Exception e) {</span>
+<span class="fc" id="L90">			assertTrue(&quot;not pass setEndDate&quot;, e instanceof HolidayException);</span>
+		}
+
+		try {
+<span class="nc" id="L94">			h.setEndDate(&quot;00122016&quot;);</span>
+<span class="nc" id="L95">			fail();</span>
+<span class="pc" id="L96">		} catch (Exception e) {</span>
+<span class="fc" id="L97">			assertTrue(&quot;not pass setEndDate&quot;, e instanceof HolidayException);</span>
+		}
+		// test day
+		try {
+<span class="nc" id="L101">			h.setEndDate(&quot;12322016&quot;);</span>
+<span class="nc" id="L102">			fail();</span>
+<span class="pc" id="L103">		} catch (Exception e) {</span>
+<span class="fc" id="L104">			assertTrue(&quot;not pass setEndDate&quot;, e instanceof HolidayException);</span>
+		}
+
+		try {
+<span class="nc" id="L108">			h.setEndDate(&quot;12002016&quot;);</span>
+<span class="nc" id="L109">			fail();</span>
+<span class="pc" id="L110">		} catch (Exception e) {</span>
+<span class="fc" id="L111">			assertTrue(&quot;not pass setEndDate&quot;, e instanceof HolidayException);</span>
+		}
+		
+		//test endDate later than startDate
+		try{
+<span class="nc" id="L116">			h.setStartDate(&quot;12010216&quot;);</span>
+<span class="nc" id="L117">			h.setEndDate(&quot;11302016&quot;);</span>
+<span class="nc" id="L118">			fail();</span>
+<span class="nc" id="L119">		}</span>
+<span class="fc" id="L120">		catch(Exception e){</span>
+<span class="fc" id="L121">			assertTrue(&quot;not pass setEndDate&quot;, e instanceof HolidayException);</span>
+		}
+		
+		try{
+<span class="fc" id="L125">			h.setStartDate(&quot;12012016&quot;);</span>
+<span class="fc" id="L126">			h.setEndDate(&quot;12302016&quot;);</span>
+			//fail();
+<span class="fc" id="L128">		}</span>
+<span class="nc" id="L129">		catch(Exception e){</span>
+<span class="nc" id="L130">			fail();//assertTrue(&quot;not pass setEndDate&quot;, e instanceof VacationException);</span>
+		}
+<span class="fc" id="L132">		assertEquals(20161230, h.getEndDate());</span>
+
+<span class="fc" id="L134">	}</span>
+	
+	
+	@Test
+	public void testSetDescription(){
+//		try{
+//			v.setDescription(&quot;&quot;);
+//			fail();
+//		}
+//		catch (Exception e) {
+//			assertTrue(&quot;not pass description&quot;, e instanceof VacationException);
+//		}
+		
+		try{
+<span class="fc" id="L148">			h.setDescription(&quot;Happy holiday!&quot;);</span>
+			
+<span class="fc" id="L150">		}</span>
+<span class="nc" id="L151">		catch (Exception e) {</span>
+<span class="nc" id="L152">			fail();</span>
+		}
+<span class="fc" id="L154">		assertEquals(&quot;Happy holiday!&quot;, h.getDescription());</span>
+	
+<span class="fc" id="L156">	}</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

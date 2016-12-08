@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Holiday.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">Holiday.java</span></div><h1>Holiday.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import cse.sc.edu.csce740.MEAT.exception.HolidayException;
+
+public class Holiday {
+	private int pStartDate;
+	private int pEndDate;
+	private String pDescription;
+	
+	//today's date
+<span class="fc" id="L15">	DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyyMMdd&quot;);</span>
+<span class="fc" id="L16">	LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L17">	String strNow = dtf.format(now);</span>
+	
+	/**
+     * Creates a default Holiday for MEAT.
+     */
+<span class="fc" id="L22">    public Holiday() {</span>
+<span class="fc" id="L23">    	this.pStartDate = 0;</span>
+<span class="fc" id="L24">    	this.pEndDate = 0;</span>
+<span class="fc" id="L25">    	this.pDescription = &quot;&quot;;</span>
+<span class="fc" id="L26">    }</span>
+    
+    /**
+	 * @return   Returns the holiday start date.
+	 */
+    public int getStartDate() {
+<span class="fc" id="L32">		return pStartDate;</span>
+	}
+    
+    /**
+	 * @param startDate   Sets the holiday start date.
+	 */
+    public void setStartDate(String startDate) throws HolidayException {
+    	//Checks date is valid
+<span class="fc bfc" id="L40" title="All 2 branches covered.">    	if (startDate.length() != 8) {</span>
+<span class="fc" id="L41">    		throw new HolidayException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    
+    	//Checks month
+<span class="fc bfc" id="L45" title="All 4 branches covered.">    	if (Integer.parseInt(startDate.substring(0, 2)) &gt; 12 || Integer.parseInt(startDate.substring(0, 2)) &lt; 1) {</span>
+<span class="fc" id="L46">    		throw new HolidayException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    	
+    	//Checks day
+<span class="fc bfc" id="L50" title="All 4 branches covered.">    	if (Integer.parseInt(startDate.substring(2, 4)) &gt; 31 || Integer.parseInt(startDate.substring(2, 4)) &lt; 1) {</span>
+<span class="fc" id="L51">    		throw new HolidayException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    	
+<span class="fc" id="L54">    	int dateToCompare = Integer.parseInt(startDate.substring(4, 8) + startDate.substring(0,2) </span>
+<span class="fc" id="L55">    							+ startDate.substring(2,4));</span>
+<span class="fc" id="L56">    	int nowToCompare = Integer.parseInt(strNow.substring(4, 8) + strNow.substring(0, 2) </span>
+<span class="fc" id="L57">    							+ strNow.substring(2, 4));</span>
+    	
+<span class="fc bfc" id="L59" title="All 2 branches covered.">    	if (dateToCompare &lt; nowToCompare) {</span>
+<span class="fc" id="L60">    		throw new HolidayException(&quot;Input date is past.&quot;);</span>
+    	} else {
+<span class="fc" id="L62">    		this.pStartDate = dateToCompare;</span>
+    	}
+<span class="fc" id="L64">	}</span>
+    
+    /**
+	 * @return   Returns the holiday end date.
+	 */
+    public int getEndDate() {
+<span class="fc" id="L70">		return pEndDate;</span>
+	}
+    
+    /**
+	 * @param endDate   Sets the holiday end date.
+	 */
+    public void setEndDate(String endDate) throws HolidayException {
+    	//Checks date is valid
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">    	if (endDate.length() != 8) {</span>
+<span class="nc" id="L79">    		throw new HolidayException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    
+    	//Checks month
+<span class="fc bfc" id="L83" title="All 4 branches covered.">    	if (Integer.parseInt(endDate.substring(0, 2)) &gt; 12 || Integer.parseInt(endDate.substring(0, 2)) &lt; 1) {</span>
+<span class="fc" id="L84">    		throw new HolidayException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    	
+    	//Checks day
+<span class="fc bfc" id="L88" title="All 4 branches covered.">    	if (Integer.parseInt(endDate.substring(2, 4)) &gt; 31 || Integer.parseInt(endDate.substring(2, 4)) &lt; 1) {</span>
+<span class="fc" id="L89">    		throw new HolidayException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    	
+<span class="fc" id="L92">    	int dateToCompare = Integer.parseInt(endDate.substring(4, 8) + endDate.substring(0,2) </span>
+<span class="fc" id="L93">    							+ endDate.substring(2,4));</span>
+    	
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    	if (dateToCompare &lt; pStartDate) {</span>
+<span class="fc" id="L96">    		throw new HolidayException(&quot;Invalid end date.&quot;);</span>
+    	} else {
+<span class="fc" id="L98">    		this.pEndDate = dateToCompare;</span>
+    	}
+<span class="fc" id="L100">	}</span>
+    
+    /**
+	 * @return   Returns the holiday description.
+	 */
+    public String getDescription() {
+<span class="fc" id="L106">		return pDescription;</span>
+	}
+    
+    /**
+	 * @param description   Sets the holiday description.
+	 */
+    public void setDescription(String description) {
+<span class="fc" id="L113">    	this.pDescription = description;</span>
+<span class="fc" id="L114">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

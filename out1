@@ -1,0 +1,19 @@
+[
+  {
+    "events": [
+      {
+        "date": "20161203",
+        "start-time": "1000",
+        "room-id": "3D11",
+        "meeting-id": "7",
+        "end-time": "1600",
+        "attendees": [
+          {
+            "name": "gayxx0627"
+          }
+        ],
+        "description": "hello"
+      }
+    ]
+  }
+]

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>MeetingTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">MeetingTest.java</span></div><h1>MeetingTest.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+import cse.sc.edu.csce740.MEAT.*;
+import cse.sc.edu.csce740.MEAT.exception.*;
+import static org.junit.Assert.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.junit.Test;
+
+<span class="fc" id="L16">public class MeetingTest {</span>
+<span class="fc" id="L17">	Meeting m = new Meeting();</span>
+<span class="fc" id="L18">	Meeting m1 = new Meeting();</span>
+<span class="fc" id="L19">	Meeting m2 = new Meeting();</span>
+	// DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyyMMdd&quot;);
+	private boolean isFuture;
+<span class="fc" id="L22">	DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyyMMdd&quot;);</span>
+<span class="fc" id="L23">	LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L24">	String strNow = dtf.format(now);</span>
+
+	// String strNow = dtf.format(now);
+	/** 
+	 * 
+	 */
+	@Test
+	public void testMeetingId(){
+		try{
+<span class="fc" id="L33">			m.setId(&quot;1&quot;);</span>
+<span class="fc" id="L34">		}</span>
+<span class="nc" id="L35">		catch (Exception e){</span>
+<span class="nc" id="L36">			fail();</span>
+		}
+<span class="fc" id="L38">		assertEquals(1,m.getId());</span>
+		
+<span class="fc" id="L40">	}</span>
+	
+	@Test
+	public void testSetDate() {
+		// test length
+		try {
+<span class="nc" id="L46">			m.setDate(&quot;2016&quot;);</span>
+<span class="nc" id="L47">			fail();</span>
+<span class="pc" id="L48">		} catch (Exception e) {</span>
+<span class="fc" id="L49">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof MeetingException);</span>
+		}
+		// test month
+		try {
+<span class="nc" id="L53">			m.setDate(&quot;13062016&quot;);</span>
+<span class="nc" id="L54">			fail();</span>
+<span class="pc" id="L55">		} catch (Exception e) {</span>
+<span class="fc" id="L56">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof MeetingException);</span>
+		}
+
+		try {
+<span class="nc" id="L60">			m.setDate(&quot;00122016&quot;);</span>
+<span class="nc" id="L61">			fail();</span>
+<span class="pc" id="L62">		} catch (Exception e) {</span>
+<span class="fc" id="L63">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof MeetingException);</span>
+		}
+		// test day
+		try {
+<span class="nc" id="L67">			m.setDate(&quot;12322016&quot;);</span>
+<span class="nc" id="L68">			fail();</span>
+<span class="pc" id="L69">		} catch (Exception e) {</span>
+<span class="fc" id="L70">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof MeetingException);</span>
+		}
+
+		try {
+<span class="nc" id="L74">			m.setDate(&quot;12002016&quot;);</span>
+<span class="nc" id="L75">			fail();</span>
+<span class="pc" id="L76">		} catch (Exception e) {</span>
+<span class="fc" id="L77">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof MeetingException);</span>
+		}
+		// test past
+
+		try {
+			// LocalDateTime now = LocalDateTime.now();
+<span class="nc" id="L83">			m.setDate(&quot;04181800&quot;);</span>
+			// m.setDate(&quot;12012016&quot;);
+<span class="nc" id="L85">			fail();</span>
+<span class="pc" id="L86">		} catch (Exception e) {</span>
+<span class="fc" id="L87">			assertTrue(&quot;not pass setDateTest&quot;, e instanceof MeetingException);</span>
+		}
+
+		try {
+			// LocalDateTime now = LocalDateTime.now();
+<span class="fc" id="L92">			m.setDate(&quot;12012016&quot;);</span>
+
+<span class="pc" id="L94">		} catch (Exception e) {</span>
+<span class="nc" id="L95">			fail();</span>
+		}
+<span class="fc" id="L97">		assertEquals(20161201, m.getDate());</span>
+
+<span class="fc" id="L99">	}</span>
+
+	@Test
+	public void testSetTime() {
+		// test time length and :
+		try {
+<span class="nc" id="L105">			m1.setStartTime(&quot;15:234&quot;);</span>
+<span class="nc" id="L106">			fail();</span>
+<span class="pc" id="L107">		} catch (Exception e) {</span>
+<span class="fc" id="L108">			assertTrue(&quot;not pass setStartTimeTest&quot;, e instanceof MeetingException);</span>
+		}
+		try {
+<span class="nc" id="L111">			m1.setStartTime(&quot;15245&quot;);</span>
+<span class="nc" id="L112">			fail();</span>
+<span class="pc" id="L113">		} catch (Exception e) {</span>
+<span class="fc" id="L114">			assertTrue(&quot;not pass setStartTimeTest&quot;, e instanceof MeetingException);</span>
+		}
+
+		try {
+<span class="fc" id="L118">			m1.setDate(strNow.substring(4, 6) + strNow.substring(6, 8) + strNow.substring(0, 4));</span>
+<span class="fc" id="L119">			m1.setStartTime(&quot;24:00&quot;);</span>
+			// fail();
+<span class="pc" id="L121">		} catch (Exception e) {</span>
+<span class="nc" id="L122">			fail();</span>
+			// assertTure(&quot;erro&quot;, e instanceof MeetingException);
+		}
+<span class="fc" id="L125">		assertEquals(2400, m1.getStartTime());</span>
+
+		try {
+<span class="fc" id="L128">			m1.setDate(strNow.substring(4, 6) + strNow.substring(6, 8) + strNow.substring(0, 4));</span>
+<span class="nc" id="L129">			m1.setStartTime(&quot;00:00&quot;);</span>
+<span class="nc" id="L130">			fail();</span>
+<span class="pc" id="L131">		} catch (Exception e) {</span>
+			// fail();
+<span class="fc" id="L133">			assertTure(&quot;not pass setStartTimeTest&quot;, e instanceof MeetingException);</span>
+		}
+
+		try {
+<span class="fc" id="L137">			m1.setDate(&quot;12012016&quot;);</span>
+<span class="fc" id="L138">			m1.setStartTime(&quot;15:30&quot;);</span>
+<span class="pc" id="L139">		} catch (Exception e) {</span>
+<span class="nc" id="L140">			fail();</span>
+		}
+<span class="fc" id="L142">		assertEquals(1530, m1.getStartTime());</span>
+
+		// test time length and :
+		try {
+<span class="fc" id="L146">			m1.setDate(&quot;12012016&quot;);</span>
+<span class="nc" id="L147">			m1.setEndTime(&quot;16:234&quot;);</span>
+<span class="nc" id="L148">			fail();</span>
+<span class="pc" id="L149">		} catch (Exception e) {</span>
+<span class="fc" id="L150">			assertTrue(&quot;not pass setStartTimeTest&quot;, e instanceof MeetingException);</span>
+		}
+		try {
+<span class="nc" id="L153">			m1.setEndTime(&quot;16245&quot;);</span>
+<span class="nc" id="L154">			fail();</span>
+<span class="pc" id="L155">		} catch (Exception e) {</span>
+<span class="fc" id="L156">			assertTrue(&quot;not pass setStartTimeTest&quot;, e instanceof MeetingException);</span>
+		}
+
+		// earlier than start time
+		try {
+<span class="fc" id="L161">			m1.setStartTime(&quot;15:30&quot;);</span>
+<span class="nc" id="L162">			m1.setEndTime(&quot;12:00&quot;);</span>
+<span class="nc" id="L163">			fail();</span>
+<span class="pc" id="L164">		} catch (Exception e) {</span>
+<span class="fc" id="L165">			assertTrue(&quot;not pass setEndTime&quot;, e instanceof MeetingException);</span>
+		}
+
+		try {
+<span class="fc" id="L169">			m1.setStartTime(&quot;15:30&quot;);</span>
+<span class="fc" id="L170">			m1.setEndTime(&quot;16:30&quot;);</span>
+<span class="pc" id="L171">		} catch (Exception e) {</span>
+			// assertTrue(&quot;not pass setEndTime&quot;, e instanceof MeetingException);
+<span class="nc" id="L173">			fail();</span>
+		}
+<span class="fc" id="L175">		assertEquals(1630, m1.getEndTime());</span>
+<span class="fc" id="L176">	}</span>
+
+	private void assertTure(String string, boolean b) {
+		// TODO Auto-generated method stub
+
+<span class="fc" id="L181">	}</span>
+
+	@Test
+
+	public void testSetDescription() {
+		try {
+<span class="nc" id="L187">			m.setDescription(&quot;&quot;);</span>
+<span class="nc" id="L188">			fail();</span>
+<span class="pc" id="L189">		} catch (Exception e) {</span>
+<span class="fc" id="L190">			assertTrue(&quot;not pass description&quot;, e instanceof MeetingException);</span>
+		}
+
+		try {
+<span class="fc" id="L194">			m.setDescription(&quot;Status update&quot;);</span>
+
+<span class="pc" id="L196">		} catch (Exception e) {</span>
+<span class="nc" id="L197">			fail();</span>
+		}
+<span class="fc" id="L199">		assertEquals(&quot;Status update&quot;, m.getDescription());</span>
+
+<span class="fc" id="L201">	}</span>
+
+	@Test
+	public void testSetAttendees() {
+		try {
+<span class="fc" id="L206">			m.setAttendee(&quot;gayxx067,bob099&quot;);</span>
+<span class="pc" id="L207">		} catch (Exception e) {</span>
+<span class="nc" id="L208">			fail();</span>
+		}
+<span class="fc" id="L210">		assertEquals(&quot;gayxx067,bob099,&quot;, m.getAttendee());</span>
+
+<span class="fc" id="L212">	}</span>
+
+	@Test
+	public void testSetRoomId(){
+		try{
+<span class="fc" id="L217">			m.setDate(&quot;12012016&quot;);</span>
+<span class="fc" id="L218">			m.setStartTime(&quot;12:30&quot;);</span>
+<span class="fc" id="L219">			m.setEndTime(&quot;13:30&quot;);</span>
+<span class="fc" id="L220">			m.setRoom(&quot;3D11&quot;);</span>
+			//fail();
+<span class="fc" id="L222">		}</span>
+<span class="nc" id="L223">		catch (Exception e){</span>
+<span class="nc" id="L224">			fail();//assertTrue(&quot;error&quot;, e instanceof MeetingException);</span>
+		}
+<span class="fc" id="L226">		assertEquals(&quot;3D11&quot;, m.getRoom());</span>
+<span class="fc" id="L227">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

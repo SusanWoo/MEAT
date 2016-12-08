@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Meeting.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">Meeting.java</span></div><h1>Meeting.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import cse.sc.edu.csce740.MEAT.exception.MeetingException;
+
+public class Meeting {
+	private int pMeetingId;
+	private int pDate;
+	private int pStartTime;
+	private int pEndTime;
+	private String pDescription;
+	private String pAttendees;
+	private String pRoomId;
+	
+	private boolean isFuture;
+<span class="fc" id="L24">	DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyyMMdd&quot;);</span>
+<span class="fc" id="L25">	LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L26">	String strNow = dtf.format(now);</span>
+	
+	
+	/**
+     * Creates a default Meeting for MEAT.
+     */
+<span class="fc" id="L32">    public Meeting() {</span>
+<span class="fc" id="L33">    	this.pMeetingId = 0;</span>
+<span class="fc" id="L34">    	this.pDate = 0;</span>
+<span class="fc" id="L35">    	this.pStartTime = 0;</span>
+<span class="fc" id="L36">    	this.pEndTime = 0;</span>
+<span class="fc" id="L37">    	this.pDescription = &quot;&quot;;</span>
+<span class="fc" id="L38">    	this.pAttendees = &quot;&quot;;</span>
+<span class="fc" id="L39">    	this.pRoomId = &quot;&quot;;</span>
+    	
+<span class="fc" id="L41">    	isFuture = false;</span>
+<span class="fc" id="L42">    }</span>
+    
+    /**
+	 * @return   Returns the id.
+	 */
+    public int getId() {
+<span class="fc" id="L48">		return pMeetingId;</span>
+	}
+    
+    /**
+     * Sets the meeting id
+     * @param meetingId
+	 * @return  void.
+	 */
+    public void setId(String meetingId) {
+<span class="fc" id="L57">		this.pMeetingId = Integer.parseInt(meetingId);</span>
+<span class="fc" id="L58">	}</span>
+    
+    
+    /**
+	 * @return   Returns the meeting date.
+	 */
+    public int getDate() {
+<span class="fc" id="L65">		return pDate;</span>
+	}
+    
+    /**
+	 * @param date   Sets the meeting date.
+	 */
+    public void setDate(String date) throws MeetingException {
+    	//Checks date is valid
+<span class="fc bfc" id="L73" title="All 2 branches covered.">    	if (date.length() != 8) {</span>
+<span class="fc" id="L74">    		throw new MeetingException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    
+    	//Checks month
+<span class="fc bfc" id="L78" title="All 4 branches covered.">    	if (Integer.parseInt(date.substring(0, 2)) &gt; 12 || Integer.parseInt(date.substring(0, 2)) &lt; 1) {</span>
+<span class="fc" id="L79">    		throw new MeetingException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    	
+    	//Checks day
+<span class="fc bfc" id="L83" title="All 4 branches covered.">    	if (Integer.parseInt(date.substring(2, 4)) &gt; 31 || Integer.parseInt(date.substring(2, 4)) &lt; 1) {</span>
+<span class="fc" id="L84">    		throw new MeetingException(&quot;Input date is invalid.&quot;);</span>
+    	}
+    	
+<span class="fc" id="L87">    	int dateToCompare = Integer.parseInt(date.substring(4, 8) + date.substring(0,2) + date.substring(2,4));</span>
+<span class="fc" id="L88">    	int nowToCompare = Integer.parseInt(strNow);</span>
+    	
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    	if (dateToCompare &lt; nowToCompare) {</span>
+<span class="fc" id="L91">    		throw new MeetingException(&quot;Input date is past.&quot;);</span>
+    	} else {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">    		if (dateToCompare &gt; nowToCompare) {</span>
+<span class="fc" id="L94">    			isFuture = true;</span>
+    		}
+<span class="fc" id="L96">    		this.pDate = dateToCompare;</span>
+    	}
+<span class="fc" id="L98">	}</span>
+    
+    /**
+	 * @return   Returns the meeting start time.
+	 */
+    public int getStartTime() {
+    	
+<span class="fc" id="L105">		return pStartTime;</span>
+	}
+    
+    /**
+	 * @param startTime   Sets the pStartTime.
+	 */
+    public void setStartTime(String startTime) throws MeetingException {
+    	//check the input starttime
+<span class="fc bfc" id="L113" title="All 4 branches covered.">    	if (startTime.length() &gt; 5 || !startTime.contains(&quot;:&quot;)) {</span>
+<span class="fc" id="L114">    		throw new MeetingException(&quot;Invalid start time.&quot;);</span>
+    	}
+    	
+<span class="fc" id="L117">    	String[] timeList = startTime.split(&quot;:&quot;);</span>
+<span class="fc" id="L118">    	String temp = &quot;&quot;;</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">    	for (String s : timeList) {</span>
+<span class="fc" id="L120">    		temp += s;</span>
+    	}
+    	
+<span class="fc" id="L123">    	int timeToCompare = Integer.parseInt(temp);    	</span>
+<span class="fc" id="L124">    	int nowToCompare = Integer.parseInt(now.getHour() + &quot;&quot; + now.getMinute() + &quot;&quot;);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">    	if (!isFuture) {</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">    		if (timeToCompare &lt;  nowToCompare) {</span>
+<span class="fc" id="L127">    			throw new MeetingException(&quot;Start time is past.&quot;);</span>
+    		} else {
+<span class="fc" id="L129">    			this.pStartTime = timeToCompare;</span>
+    		}
+<span class="fc" id="L131">    	} else {</span>
+<span class="fc" id="L132">    		this.pStartTime = timeToCompare;</span>
+    	}
+<span class="fc" id="L134">	}</span>
+    
+    /**
+	 * @return   Returns the meeting end time.
+	 */
+    public int getEndTime() {
+<span class="fc" id="L140">		return pEndTime;</span>
+	}
+    
+    /**
+	 * @param endTime   Sets the pEndTime.
+	 */
+    public void setEndTime(String endTime) throws MeetingException {
+    	//check the input endtime
+<span class="fc bfc" id="L148" title="All 4 branches covered.">    	if (endTime.length() &gt; 5 || !endTime.contains(&quot;:&quot;)) {</span>
+<span class="fc" id="L149">    		throw new MeetingException(&quot;Invalid end time.&quot;);</span>
+    	}
+    	
+<span class="fc" id="L152">    	String[] timeList = endTime.split(&quot;:&quot;);</span>
+<span class="fc" id="L153">    	String temp = &quot;&quot;;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    	for (String s : timeList) {</span>
+<span class="fc" id="L155">    		temp += s;</span>
+    	}
+    	
+<span class="fc" id="L158">    	int timeToCompare = Integer.parseInt(temp);</span>
+    	
+    	//if end time less than start time, throws error
+<span class="fc bfc" id="L161" title="All 2 branches covered.">    	if (pStartTime &gt; timeToCompare) {</span>
+<span class="fc" id="L162">    		throw new MeetingException(&quot;End time is less than start time.&quot;);</span>
+    	} else {
+<span class="fc" id="L164">    		this.pEndTime = timeToCompare;</span>
+    	}
+<span class="fc" id="L166">	}</span>
+    
+    /**
+	 * @return   Returns the meeting description.
+	 */
+    public String getDescription() {
+<span class="fc" id="L172">		return pDescription;</span>
+	}
+    
+    /**
+	 * @param desctiption   Sets the description.
+	 */
+    public void setDescription(String description) throws MeetingException {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">    	if (description == &quot;&quot;) {</span>
+<span class="fc" id="L180">    		throw new MeetingException(&quot;Description should not be null or empty.&quot;);</span>
+    	} else {
+<span class="fc" id="L182">    		this.pDescription = description;</span>
+    	}
+<span class="fc" id="L184">	}</span>
+    
+    /**
+	 * @return   Returns the attendee.
+	 */
+    public String getAttendee() {
+<span class="fc" id="L190">		return pAttendees;</span>
+	}
+    
+    /**
+	 * @param attendee   Sets the attendee.
+	 */
+    public void setAttendee(String attendees) throws MeetingException {
+    	//check if the attendee is available by checking the vacation table
+<span class="fc" id="L198">    	String[] attendeeLiset = attendees.split(&quot;,&quot;);</span>
+<span class="fc" id="L199">    	String attendRes = &quot;&quot;;</span>
+//    	boolean available = true;
+    	
+    	//open databse
+<span class="fc" id="L203">		Connection c = null;</span>
+<span class="fc" id="L204">	    Statement stmt = null;</span>
+<span class="fc" id="L205">	    ResultSet rs  = null;</span>
+	    
+	    try {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">	    	for (String a : attendeeLiset) {</span>
+	    		//check vacation table
+<span class="fc" id="L210">	    		String sql = &quot;select startDate, endDate from vacation where employeeid = '&quot; + a  + &quot;' and startdate &lt;= &quot; </span>
+<span class="fc" id="L211">	    					+  pDate + &quot; and enddate &gt;= &quot; + pDate + &quot;;&quot;;</span>
+<span class="fc" id="L212">	    		Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L213">	    		c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+<span class="fc" id="L214">	    		stmt = c.createStatement();</span>
+<span class="fc" id="L215">	    		rs = stmt.executeQuery(sql);</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">	    		if (!rs.next()) {</span>
+<span class="fc" id="L217">	    			attendRes += a + &quot;,&quot;;</span>
+	    		}
+	    	}      
+<span class="fc" id="L220">    		rs.close();</span>
+<span class="fc" id="L221">    		c.close();</span>
+<span class="pc" id="L222">	    } catch ( Exception e ) {</span>
+<span class="nc" id="L223">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+//    	      System.exit(0);
+	    }
+<span class="fc" id="L226">    	this.pAttendees = attendRes;	</span>
+<span class="fc" id="L227">	}</span>
+    
+
+    
+	/**
+	 * @return  Returns the room id.
+	 */
+    public String getRoom() {
+<span class="fc" id="L235">   		return pRoomId;</span>
+   	}
+       
+     /**
+   	 * @param room   Sets the room id.
+   	 */
+    public void setRoom(String room) throws MeetingException {
+    	//checks if room is available
+<span class="fc" id="L243">    	boolean available = true;</span>
+<span class="fc" id="L244">    	String sql = &quot;select starttime, endtime from MEETING where roomid = '&quot; + room + &quot;' and meetingdate = &quot; + pDate + &quot;;&quot;;</span>
+    	//open databse
+<span class="fc" id="L246">		Connection c = null;</span>
+<span class="fc" id="L247">	    Statement stmt = null;</span>
+	    try {
+<span class="fc" id="L249">	      Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L250">	      c = DriverManager.getConnection(&quot;jdbc:sqlite::resource:MEAT.db&quot;);</span>
+
+<span class="fc" id="L252">	      stmt = c.createStatement();</span>
+<span class="fc" id="L253">	      ResultSet rs = stmt.executeQuery(sql);</span>
+	      
+<span class="fc bfc" id="L255" title="All 2 branches covered.">	      while (rs.next()) {</span>
+<span class="fc" id="L256">	    	  int sTime = rs.getInt(&quot;startTime&quot;);</span>
+<span class="fc" id="L257">	    	  int eTime = rs.getInt(&quot;endtime&quot;);</span>
+<span class="pc bpc" id="L258" title="7 of 8 branches missed.">	    	  if ((pStartTime &gt;= sTime || pStartTime &lt;= eTime) || (pEndTime &gt;= sTime &amp;&amp; pEndTime &lt;= eTime)) {</span>
+<span class="fc" id="L259">	    		  available = false;</span>
+<span class="fc" id="L260">	    		  break;</span>
+	    	  }
+	      }
+	      
+<span class="fc" id="L264">	      rs.close();</span>
+<span class="fc" id="L265">	      c.close();</span>
+	      
+<span class="fc bfc" id="L267" title="All 2 branches covered.">	      if (available) {</span>
+<span class="fc" id="L268">	    	  this.pRoomId = room;</span>
+<span class="fc" id="L269">	      } else {</span>
+<span class="fc" id="L270">	    	  throw new MeetingException(&quot;Room not available during given start/end time.&quot;);</span>
+	      }
+	      
+	      
+	     
+<span class="fc" id="L275">	    } catch ( Exception e ) {</span>
+<span class="fc" id="L276">	      System.err.println( e.getClass().getName() + &quot;: &quot; + e.getMessage() );</span>
+//	      System.exit(0);
+	    }
+	    
+       	
+<span class="fc" id="L281">   	}</span>
+    
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>

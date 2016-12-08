@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>EventViewer.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MEAT (1) (Nov 30, 2016 12:52:04 AM)</a> &gt; <a href="../../index.html" class="el_group">MEAT</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">cse.sc.edu.csce740.MEAT</a> &gt; <span class="el_source">EventViewer.java</span></div><h1>EventViewer.java</h1><pre class="source lang-java linenums">package cse.sc.edu.csce740.MEAT;
+
+import java.util.List;
+
+
+public class EventViewer {
+	private Events events;
+	
+	/**
+	 * Constructs the event viewer
+	 */
+<span class="fc" id="L12">	public EventViewer() {</span>
+<span class="fc" id="L13">		events = new Events();</span>
+<span class="fc" id="L14">	}</span>
+	
+	/**
+	 * Prints the universal schedule
+	 * @param List&lt;Arguments&gt;
+	 * @return boolean
+	 */
+	public boolean printScheduleAll(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L22">		int startDate = 0;</span>
+<span class="fc" id="L23">		int endDate = 0;</span>
+<span class="fc" id="L24">		String outputFile = &quot;&quot;;</span>
+		
+<span class="fc bfc" id="L26" title="All 2 branches covered.">		for (Arguments a : aList) {</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">			if (a.value.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L28">				System.out.println(&quot;Invalid input occurred.&quot;);</span>
+<span class="fc" id="L29">				return false;</span>
+			}
+<span class="pc bpc" id="L31" title="4 of 10 branches missed.">			switch (a.name) {</span>
+				case &quot;start-date&quot;:
+<span class="fc" id="L33">					startDate = Integer.parseInt(a.value.substring(4, 8) + a.value.substring(0, 2) + a.value.substring(2, 4));</span>
+<span class="fc" id="L34">					break;</span>
+				case &quot;end-date&quot;:
+<span class="fc" id="L36">					endDate = Integer.parseInt(a.value.substring(4, 8) + a.value.substring(0, 2) + a.value.substring(2, 4));</span>
+<span class="fc" id="L37">					break;</span>
+				case &quot;output-file&quot;:
+<span class="fc" id="L39">					outputFile = a.value;</span>
+					break;
+			}
+		}
+<span class="fc" id="L43">		return events.printScheduleAll(startDate, endDate, outputFile);</span>
+	}
+	
+	/**
+	 * Prints the employee schedule
+	 * @param List&lt;Arguments&gt;
+	 * @return boolean
+	 */
+	public boolean printScheduleEmployee(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L52">		String employeeId = &quot;&quot;;</span>
+<span class="fc" id="L53">		int startDate = 0;</span>
+<span class="fc" id="L54">		int endDate = 0;</span>
+<span class="fc" id="L55">		String outputFile = &quot;&quot;;</span>
+		
+<span class="fc bfc" id="L57" title="All 2 branches covered.">		for (Arguments a : aList) {</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">			if (a.value.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L59">				System.out.println(&quot;Invalid input occurred.&quot;);</span>
+<span class="fc" id="L60">				return false;</span>
+			}
+<span class="pc bpc" id="L62" title="5 of 13 branches missed.">			switch (a.name) {</span>
+				case &quot;employee-id&quot;:
+<span class="fc" id="L64">					employeeId = a.value;</span>
+<span class="fc" id="L65">					break;</span>
+				case &quot;start-date&quot;:
+<span class="fc" id="L67">					startDate = Integer.parseInt(a.value.substring(4, 8) + a.value.substring(0, 2) + a.value.substring(2, 4));</span>
+<span class="fc" id="L68">					break;</span>
+				case &quot;end-date&quot;:
+<span class="fc" id="L70">					endDate = Integer.parseInt(a.value.substring(4, 8) + a.value.substring(0, 2) + a.value.substring(2, 4));</span>
+<span class="fc" id="L71">					break;</span>
+				case &quot;output-file&quot;:
+<span class="fc" id="L73">					outputFile = a.value;</span>
+					break;
+			}
+		}
+		
+<span class="fc" id="L78">		return events.printScheduleEmployee(employeeId, startDate, endDate, outputFile);</span>
+	}
+	
+	
+	/**
+	 * Prints the room schedule
+	 * @param List&lt;Arguments&gt;
+	 * @return boolean
+	 */
+	public boolean printScheduleRoom(List&lt;Arguments&gt; aList) {
+<span class="fc" id="L88">		String roomId = &quot;&quot;;</span>
+<span class="fc" id="L89">		int startDate = 0;</span>
+<span class="fc" id="L90">		int endDate = 0;</span>
+<span class="fc" id="L91">		String outputFile = &quot;&quot;;</span>
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">		for (Arguments a : aList) {</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">			if (a.value.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L95">				System.out.println(&quot;Invalid input occurred.&quot;);</span>
+<span class="fc" id="L96">				return false;</span>
+			}
+<span class="pc bpc" id="L98" title="5 of 13 branches missed.">			switch (a.name) {</span>
+				case &quot;room-id&quot;:
+<span class="fc" id="L100">					roomId = a.value;</span>
+<span class="fc" id="L101">					break;</span>
+				case &quot;start-date&quot;:
+<span class="fc" id="L103">					startDate = Integer.parseInt(a.value.substring(4, 8) + a.value.substring(0, 2) + a.value.substring(2, 4));	</span>
+<span class="fc" id="L104">					break;</span>
+				case &quot;end-date&quot;:
+<span class="fc" id="L106">					endDate = Integer.parseInt(a.value.substring(4, 8) + a.value.substring(0, 2) + a.value.substring(2, 4));	</span>
+<span class="fc" id="L107">					break;</span>
+				case &quot;output-file&quot;:
+<span class="fc" id="L109">					outputFile = a.value;</span>
+					break;
+			}
+		}
+<span class="fc" id="L113">		return events.printScheduleRoom(roomId, startDate, endDate, outputFile);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>MEAT (1) (Nov 30, 2016 12:52:04 AM)</div></body></html>
